@@ -22,10 +22,20 @@ export const DEFAULT_SETTINGS: GroupSnippetsSettings = {
 	groups: [],
 }
 
-export function openDetails(groupName: string) {
+function getDetailsState(groupName: string) {
 	for (let i = 0; i < document.getElementsByTagName('details').length; i++) {
-		const details = document.getElementsByTagName('details')[i];
+		const details = document.getElementsByTagName('details')[i] as HTMLDetailsElement;
 		if (details.innerText === groupName) {
+			return details.open;
+		}
+	}
+	return true;
+}
+
+export function openDetails(groupName: string, detailsState: boolean) {
+	for (let i = 0; i < document.getElementsByTagName('details').length; i++) {
+		const details = document.getElementsByTagName('details')[i] as HTMLDetailsElement;
+		if (details.innerText === groupName && detailsState) {
 			details.open = true;
 		}
 	}
@@ -41,6 +51,7 @@ async function removeDeletedSnippets(customCSS: any, plugin: GroupSnippetsPlugin
 	}
 	await plugin.saveSettings();
 }
+
 
 export class GroupSnippetsSettings extends PluginSettingTab {
 	plugin: GroupSnippetsPlugins;
@@ -76,8 +87,9 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 							active: false
 						});
 						await this.plugin.saveSettings();
+						const detailState = getDetailsState(result);
 						this.display();
-						openDetails(result);
+						openDetails(result, detailState);
 					}).open();
 				})
 			})
@@ -99,7 +111,8 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 			const customCSS = (this.app as any).customCss;
 			const details = containerEl.createEl('details');
 			const summary = details.createEl('summary', {text: groupName});
-			const icon = snippets.active ? 'eye' : 'eye-off'
+			const icon = snippets.active ? 'check-in-circle' : 'cross-in-box'
+			const iconDesc = snippets.active ? 'Toggle everything' : 'Disable everything';
 			new Setting(summary)
 				.setClass('group-options')
 				.addButton((btn: ButtonComponent) => {
@@ -117,19 +130,43 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						.onClick(async () => {
 							this.plugin.settings.groups = this.plugin.settings.groups.filter(group => group.name !== groupName);
 							await this.plugin.saveSettings();
+							const detailState = getDetailsState(groupName);
 							this.display();
-							openDetails(groupName);
+							openDetails(groupName, detailState);
 						})
 				})
 
+				.addButton((btn: ButtonComponent) => {
+					btn
+						.setIcon(icon)
+						.setTooltip(iconDesc)
+						.onClick(() => {
+							if (snippets.active) {
+								snippets.active = false;
+								snippets.snippets.forEach(snippet => {
+									snippet.enabled = true;
+								})
+							} else {
+								snippets.active = true;
+								snippets.snippets.forEach(snippet => {
+									snippet.enabled = false;
+								})
+							}
+							const detailState = getDetailsState(groupName);
+							this.plugin.saveSettings();
+							this.display();
+							openDetails(groupName, detailState);
+						})
+				})
 				.addButton((btn) => {
 					btn
-						.setTooltip('Toggle this group')
-						.setIcon(icon)
+						.setTooltip('Toggle the grouped snippets in on/off')
+						.setIcon('command-glyph')
 						.onClick(() => {
 							toggleEnabledSnippet(snippets, customCSS);
-							snippets.active = !snippets.active;
+							const detailState = getDetailsState(groupName);
 							this.display();
+							openDetails(groupName, detailState);
 						})
 				});
 			details.createEl('p');
@@ -152,8 +189,9 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 							.onClick(() => {
 							snippets.snippets.splice(snippets.snippets.indexOf(snippet), 1);
 							this.plugin.saveSettings();
+							const detailState = getDetailsState(groupName);
 							this.display();
-							openDetails(groupName);
+							openDetails(groupName, detailState);
 						})
 					});
 			}

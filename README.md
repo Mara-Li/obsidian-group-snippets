@@ -2,6 +2,7 @@
 
 This plugin allow you to set group of CSS snippets to class them and enable them in one click (or command).
 
+
 ## Usage
 
 1. Go to the Settings of the plugin
@@ -13,6 +14,14 @@ This plugin allow you to set group of CSS snippets to class them and enable them
 After this, you have your group of CSS snippets ! 🎉🎉
 
 So, now, to enable the group, run the command `obsidian group enable group_name`. This commands will enable every snippets "enabled" ! You can check your Appearance tab if you need to check.
+
+You can also run this command directly in the settings, when clicking on the `gear` icon!
+The plugin will enable the **enabled** snippet, and **disable** the disabled snippets!
+
+
+The `eye` icon allow you to enable **every** snippets in the group or **disable** them.
+
+Normally, this plugin can totally override the `Appareance` for Snippets !
 
 🗒️ Some notes : 
 - You need to reload the snippets (using the button refresh) when you remove snippets. But, no worry, the plugin can't activate snippet that doesn't exist ! It's just the list that need some refreshing :).

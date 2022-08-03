@@ -2,12 +2,10 @@ import {Plugin} from 'obsidian';
 import {GroupSnippetsSettings, DEFAULT_SETTINGS, Snippets} from './settings';
 
 export function toggleEnabledSnippet(groupSnippet: {name: string, snippets: Snippets[], active:boolean}, customCSS: any) {
+	console.log('Running the group Snippet commands for ' + groupSnippet.name);
 	for (const snippet of groupSnippet.snippets) {
-		if (snippet.enabled) {
-			customCSS.setCssEnabledStatus(snippet.snippetName, !customCSS.enabledSnippets.has(snippet.snippetName));
-		}
+		customCSS.setCssEnabledStatus(snippet.snippetName, snippet.enabled);
 	}
-	return groupSnippet;
 }
 
 export default class GroupSnippetsPlugins extends Plugin {
@@ -30,7 +28,6 @@ export default class GroupSnippetsPlugins extends Plugin {
 					callback: async () => {
 						console.log(`Toggling group snippets: ${group.name}`);
 						toggleEnabledSnippet(group, customCSS);
-						group.active = !group.active;
 						await this.saveSettings();
 					}
 				});
@@ -60,9 +57,6 @@ export default class GroupSnippetsPlugins extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	enableCommand() {
-		
-	}
 }
 
 
