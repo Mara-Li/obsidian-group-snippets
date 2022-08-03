@@ -13,6 +13,10 @@ function toggleEnabledSnippet(groupSnippet: {name: string, snippets: Snippets[]}
 export default class GroupSnippetsPlugins extends Plugin {
 	settings: GroupSnippetsSettings;
 
+	reloadCommands(){
+		this.unload();
+		this.load();
+	}
 
 	async onload() {
 		console.log('Enable Group Snippets');
@@ -22,7 +26,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		groupSnippets.forEach(group => {
 			this.addCommand({
 					id: `groupSnippets.${group.name}`,
-					name: `Toggle Group Snippets: ${group.name}`,
+					name: `Toggle Group: ${group.name}`,
 					callback: async () => {
 						console.log(`Toggling group snippets: ${group.name}`);
 						toggleEnabledSnippet(group, customCSS);
@@ -30,10 +34,16 @@ export default class GroupSnippetsPlugins extends Plugin {
 				});
 
 		})
-
-
-
 		this.addSettingTab(new GroupSnippetsSettings(this.app, this));
+
+		this.addCommand({
+			id: 'reloadGroupSnippets',
+			name: 'Reload Group Snippets',
+			callback: async () => {
+                console.log('Reloading Group Snippets');
+				this.reloadCommands();
+			}
+		});
 	}
 
 	onunload() {
@@ -46,6 +56,10 @@ export default class GroupSnippetsPlugins extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	enableCommand() {
+		
 	}
 }
 
