@@ -18,6 +18,8 @@ So, now, to enable the group, run the command `obsidian group enable group_name`
 - You need to reload the snippets (using the button refresh) when you remove snippets. But, no worry, the plugin can't activate snippet that doesn't exist ! It's just the list that need some refreshing :).
 - After each addition of group, you need to reload the plugin using the commands : `Reload Group Snippets`
 
+![](docs_gif.gif)
+
 ## 🤖 Development
 
 1. Fork the repository on GitHub

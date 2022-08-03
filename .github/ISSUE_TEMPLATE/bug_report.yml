@@ -1,0 +1,76 @@
+name: Bug Report
+description: Fill a bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - Mara-Li
+body:
+  - type: markdown
+    id: info-user
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report.
+  - type: checkboxes
+    attributes:
+      label: Issue validation
+      description: "Thanks to check if your issue is relative to the repository. Any non relative or duplicate issue will be closed."
+      options:
+        - label: "I checked the issue to prevent duplicate"
+          required: true
+        - label: "I checked my configurations files and the documentation"
+          required: true
+  - type: textarea
+    id: describe-bug
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: "Tell us what you see! And don't forget the error"
+    validations:
+      required: true
+  - type: textarea
+    id: repro-bug
+    attributes:
+      label: How to reproduce ?
+      description: Step to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error 
+  - type: textarea
+    attributes:
+      label: Configuration
+      description: |
+        Please, send me a screenshot or a file with your configuration!
+        The configuration will be in `.obsidian/plugins/obsidian-group-snippets`.
+    validations:
+      required: true    
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks. 
+       	You can open the Obsidian's console with "CTRL+MAJ+I."
+      render: shell
+  - type: dropdown
+    id: version
+    attributes:
+      label: OS
+      description: Check your OS
+      multiple: true
+      options:
+        - IOS
+        - Android
+        - MacOS
+        - Windows
+        - Linux
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
+  
