@@ -75,6 +75,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						this.display();
 						openDetails(result);
 					}).open();
+
 				})
 			})
 			.addButton((btn: ButtonComponent) => {

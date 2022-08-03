@@ -13,7 +13,9 @@ function toggleEnabledSnippet(groupSnippet: {name: string, snippets: Snippets[]}
 export default class GroupSnippetsPlugins extends Plugin {
 	settings: GroupSnippetsSettings;
 
+
 	async onload() {
+		console.log('Enable Group Snippets');
 		await this.loadSettings();
 		const groupSnippets = this.settings.groups;
 		const customCSS = (this.app as any).customCss;
