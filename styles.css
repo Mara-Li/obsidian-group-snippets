@@ -1,4 +1,17 @@
-/* Sets all the text color to red! */
-body {
-    color: red;
+.setting-item.group-options {
+	display: inline-flex;
+	padding: 0;
+	position: absolute;
+	right:50px
+}
+
+.setting-item.group-snippet-setting {
+	border: none;
+	padding: 4px 3%;
+
+}
+
+.setting-item.group-snippet-setting > .setting-item-info {
+	border: none;
+	display: list-item;
 }
