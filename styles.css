@@ -5,6 +5,10 @@
 	right:50px
 }
 
+summary.group-snippets-summary {
+	padding-bottom: 15px;
+}
+
 .setting-item.group-snippet-setting {
 	border: none;
 	padding: 4px 3%;

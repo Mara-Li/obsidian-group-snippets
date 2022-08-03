@@ -111,6 +111,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 			const customCSS = (this.app as any).customCss;
 			const details = containerEl.createEl('details');
 			const summary = details.createEl('summary', {text: groupName});
+			summary.addClass('group-snippets-summary');
 			const icon = snippets.active ? 'check-in-circle' : 'cross-in-box'
 			const iconDesc = snippets.active ? 'Toggle everything' : 'Disable everything';
 			new Setting(summary)
