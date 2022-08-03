@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-group-snippets",
-	"version": "1.3.0",
+	"version": "1.2.0",
 	"description": "Create folder of snippets to activate them in one click ! ",
 	"main": "main.js",
 	"scripts": {
@@ -10,7 +10,7 @@
 		"version": "commit-and-tag-version",
 		"bump": "node version-bump.mjs",
 		"beta": "commit-and-tag-version  --prerelease --tag-build beta && node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit",
-		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json && node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit && git push --tags"
+		"publish": "commit-and-tag-version node version-beta.mjs && git add manifest-beta.json && git commit --amend --no-edit && git push --tags"
 	},
 	"commit-and-tag-version": {
 		"t": "",
