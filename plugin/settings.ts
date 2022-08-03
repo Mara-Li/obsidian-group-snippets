@@ -1,5 +1,6 @@
-import {App, ButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
+import {App, ButtonComponent, Notice, PluginSettingTab, setIcon, Setting} from "obsidian";
 import GroupSnippetsPlugins from "./main";
+import {toggleEnabledSnippet} from "./main";
 import {groupSnippetNaming, GroupSnippetsModal} from "./modals";
 
 export interface Snippets {
@@ -10,14 +11,15 @@ export interface Snippets {
 export interface GroupSnippetsSettings {
 	groups: {
 		name: string,
-		snippets: Snippets[]
-	}[]
+		snippets: Snippets[],
+		active: boolean
+	}[],
 
 }
 
 // @ts-ignore
 export const DEFAULT_SETTINGS: GroupSnippetsSettings = {
-	groups: []
+	groups: [],
 }
 
 export function openDetails(groupName: string) {
@@ -63,25 +65,27 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName('Add Group')
 			.addButton((btn: ButtonComponent) => {
-				btn.setIcon('plus');
-				btn.setTooltip('Add a new group');
-				btn.onClick(async () => {
+				btn
+					.setIcon('plus')
+					.setTooltip('Add a new group')
+					.onClick(async () => {
 					new groupSnippetNaming(this.app, this.plugin, async (result) => {
 						this.plugin.settings.groups.push({
 							name: result,
-							snippets: []
+							snippets: [],
+							active: false
 						});
 						await this.plugin.saveSettings();
 						this.display();
 						openDetails(result);
 					}).open();
-
 				})
 			})
 			.addButton((btn: ButtonComponent) => {
-				btn.setIcon('switch');
-				btn.setTooltip('Refresh the snippet list');
-				btn.onClick(() => {
+				btn
+					.setIcon('switch')
+					.setTooltip('Refresh the snippet list')
+					.onClick(() => {
 					const customCSS = (this.app as any).customCss;
 					customCSS.readCssFolders();
 					removeDeletedSnippets(customCSS, this.plugin);
@@ -92,26 +96,41 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 
 		for (const snippets of this.plugin.settings.groups) {
 			const groupName = snippets.name;
+			const customCSS = (this.app as any).customCss;
 			const details = containerEl.createEl('details');
 			const summary = details.createEl('summary', {text: groupName});
+			const icon = snippets.active ? 'eye' : 'eye-off'
 			new Setting(summary)
 				.setClass('group-options')
 				.addButton((btn: ButtonComponent) => {
-					btn.setIcon('edit');
-					btn.setTooltip('Add snippets!');
-					btn.onClick(async () => {
+					btn
+						.setIcon('edit')
+						.setTooltip('Add snippets!')
+						.onClick(async () => {
 						new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
 					})
 				})
 				.addButton((btn: ButtonComponent) => {
-					btn.setIcon('trash');
-					btn.setTooltip('Delete this group');
-					btn.onClick(async () => {
-						this.plugin.settings.groups = this.plugin.settings.groups.filter(group => group.name !== groupName);
-						await this.plugin.saveSettings();
-						this.display();
-						openDetails(groupName);
-					})
+					btn
+						.setIcon('trash')
+						.setTooltip('Delete this group')
+						.onClick(async () => {
+							this.plugin.settings.groups = this.plugin.settings.groups.filter(group => group.name !== groupName);
+							await this.plugin.saveSettings();
+							this.display();
+							openDetails(groupName);
+						})
+				})
+
+				.addButton((btn) => {
+					btn
+						.setTooltip('Toggle this group')
+						.setIcon(icon)
+						.onClick(() => {
+							toggleEnabledSnippet(snippets, customCSS);
+							snippets.active = !snippets.active;
+							this.display();
+						})
 				});
 			details.createEl('p');
 			for (const snippet of snippets.snippets) {
@@ -119,16 +138,18 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					.setClass('group-snippet-setting')
 					.setName(snippet.snippetName)
 					.addToggle((toggle) => {
-						toggle.setValue(snippet.enabled);
-						toggle.onChange((value) => {
+						toggle
+							.setValue(snippet.enabled)
+							.onChange((value) => {
 							snippet.enabled = value;
 							this.plugin.saveSettings();
 						});
 					})
 					.addButton((btn: ButtonComponent) => {
-						btn.setIcon('trash');
-						btn.setTooltip('Remove this snippet');
-						btn.onClick(() => {
+						btn
+							.setIcon('trash')
+							.setTooltip('Remove this snippet')
+							.onClick(() => {
 							snippets.snippets.splice(snippets.snippets.indexOf(snippet), 1);
 							this.plugin.saveSettings();
 							this.display();
