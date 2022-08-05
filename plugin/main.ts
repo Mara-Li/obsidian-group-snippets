@@ -1,5 +1,6 @@
 import {Plugin} from 'obsidian';
 import {GroupSnippetsSettings, DEFAULT_SETTINGS, Snippets} from './settings';
+import t, {StringFunc} from "./i18n"
 
 export function toggleEnabledSnippet(groupSnippet: {name: string, snippets: Snippets[], active:boolean}, customCSS: any) {
 	console.log('Running the group Snippet commands for ' + groupSnippet.name);
@@ -24,9 +25,9 @@ export default class GroupSnippetsPlugins extends Plugin {
 		groupSnippets.forEach(group => {
 			this.addCommand({
 					id: `groupSnippets.${group.name}`,
-					name: `Toggle Group: ${group.name}`,
+					name: (t('commandsName') as StringFunc)(group.name),
 					callback: async () => {
-						console.log(`Toggling group snippets: ${group.name}`);
+						console.log((t('commandsName') as StringFunc)(group.name));
 						toggleEnabledSnippet(group, customCSS);
 						await this.saveSettings();
 					}
@@ -37,9 +38,9 @@ export default class GroupSnippetsPlugins extends Plugin {
 
 		this.addCommand({
 			id: 'reloadGroupSnippets',
-			name: 'Reload Group Snippets',
+			name: (t('reloadGroupCommand') as string),
 			callback: async () => {
-                console.log('Reloading Group Snippets');
+                console.log(t('reloadGroupCommand') as string);
 				this.reloadCommands();
 			}
 		});

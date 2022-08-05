@@ -1,5 +1,6 @@
 import {App, FuzzySuggestModal, Modal, Notice, Setting} from "obsidian";
 import {GroupSnippetsSettings, Snippets, openDetails} from "./settings";
+import t, {StringFunc} from "./i18n"
 import GroupSnippetsPlugins from "./main";
 
 function getAllSnippets(customCSS: any, settings: GroupSnippetsSettings, groupName: string): Snippets[] {
@@ -30,7 +31,7 @@ export class groupSnippetNaming extends Modal {
 
 	onOpen() {
 		const {contentEl} = this;
-		contentEl.createEl('h2', {text: 'Group Snippet Name'});
+		contentEl.createEl('h2', {text: t('groupSnippetNaming') as string});
 		new Setting(contentEl)
 			.addText((text) =>
 				text.onChange((value) => {
@@ -39,14 +40,14 @@ export class groupSnippetNaming extends Modal {
 		new Setting(contentEl)
 			.addButton((btn) =>
 				btn
-					.setButtonText("Submit")
+					.setButtonText(t('submitButton') as string)
 					.setCta()
 					.onClick(() => {
 						if (this.plugin.settings.groups.find(group => group.name === this.result) === undefined) {
 							this.onSubmit(this.result);
 							this.close();
 						} else {
-							new Notice('Error ! This group already exists')
+							new Notice(t('noticeError') as string);
 						}
 					}));
 	}
@@ -79,7 +80,7 @@ export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 	}
 
 	onChooseItem(item: Snippets, evt: MouseEvent | KeyboardEvent) {
-		new Notice(`Selected ${item.snippetName}`);
+		new Notice((t('commandsName') as StringFunc)(item.snippetName));
 		if (this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName) !== undefined) {
 			// @ts-ignore
 			this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName).snippets.push(item);

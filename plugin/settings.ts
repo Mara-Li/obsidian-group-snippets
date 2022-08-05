@@ -2,7 +2,7 @@ import {App, ButtonComponent, Notice, PluginSettingTab, setIcon, Setting} from "
 import GroupSnippetsPlugins from "./main";
 import {toggleEnabledSnippet} from "./main";
 import {groupSnippetNaming, GroupSnippetsModal} from "./modals";
-
+import t from './i18n'
 export interface Snippets {
 	snippetName: string,
 	enabled: boolean
@@ -69,16 +69,16 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Snippets List'});
-		containerEl.createEl('p', {text: 'The following is a list of the group snippets created by the plugin.'});
-		containerEl.createEl('p', {text: 'You can add/remove/edit the groups here.'});
+		containerEl.createEl('h2', {text: (t('snippetListHeader') as string)});
+		containerEl.createEl('p', {text: (t('snippetListDesc') as string)});
+		containerEl.createEl('p', {text: t('snippetListHelp') as string});
 
 		new Setting(containerEl)
-			.setName('Add Group')
+			.setName(t('addGroupHeader') as string)
 			.addButton((btn: ButtonComponent) => {
 				btn
 					.setIcon('plus')
-					.setTooltip('Add a new group')
+					.setTooltip(t('addGroupTooltip') as string)
 					.onClick(async () => {
 					new groupSnippetNaming(this.app, this.plugin, async (result) => {
 						this.plugin.settings.groups.push({
@@ -96,13 +96,13 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 			.addButton((btn: ButtonComponent) => {
 				btn
 					.setIcon('switch')
-					.setTooltip('Refresh the snippet list')
+					.setTooltip(t('refreshToolTip') as string)
 					.onClick(() => {
 					const customCSS = (this.app as any).customCss;
 					customCSS.readCssFolders();
 					removeDeletedSnippets(customCSS, this.plugin);
 					this.display();
-					new Notice('Snippets reloaded');
+					new Notice(t('refreshNotice') as string);
 				})
 			});
 
@@ -113,13 +113,13 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 			const summary = details.createEl('summary', {text: groupName});
 			summary.addClass('group-snippets-summary');
 			const icon = snippets.active ? 'check-in-circle' : 'cross-in-box'
-			const iconDesc = snippets.active ? 'Toggle everything' : 'Disable everything';
+			const iconDesc = snippets.active ? (t('toggleEverything') as string) : (t('disableEverything') as string);
 			new Setting(summary)
 				.setClass('group-options')
 				.addButton((btn: ButtonComponent) => {
 					btn
 						.setIcon('edit')
-						.setTooltip('Add snippets!')
+						.setTooltip(t('addSnippet') as string)
 						.onClick(async () => {
 						new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
 					})
@@ -127,7 +127,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 				.addButton((btn: ButtonComponent) => {
 					btn
 						.setIcon('trash')
-						.setTooltip('Delete this group')
+						.setTooltip(t('deleteGroup') as string)
 						.onClick(async () => {
 							this.plugin.settings.groups = this.plugin.settings.groups.filter(group => group.name !== groupName);
 							await this.plugin.saveSettings();
@@ -161,7 +161,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 				})
 				.addButton((btn) => {
 					btn
-						.setTooltip('Toggle the grouped snippets in on/off')
+						.setTooltip(t('toggleSnippet') as string)
 						.setIcon('command-glyph')
 						.onClick(() => {
 							toggleEnabledSnippet(snippets, customCSS);
@@ -186,7 +186,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					.addButton((btn: ButtonComponent) => {
 						btn
 							.setIcon('trash')
-							.setTooltip('Remove this snippet')
+							.setTooltip(t('removeSnippet') as string)
 							.onClick(() => {
 							snippets.snippets.splice(snippets.snippets.indexOf(snippet), 1);
 							this.plugin.saveSettings();
