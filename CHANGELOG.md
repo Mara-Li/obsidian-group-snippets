@@ -2,14 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
-## [1.4.0-0](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.2.1...1.4.0-0) (2022-08-05)
-
-
-### Features
-
-* **i18n:** Adding translation ([6ae2d33](https://github.com/Mara-Li/obsidian-group-snippets/commit/6ae2d3356ffe7cefee3f37b0a91ed327000fb634))
-* mobile specific control ([8f8e09b](https://github.com/Mara-Li/obsidian-group-snippets/commit/8f8e09b8682d687ea306e9f05650d891b407ba3d))
-
 ## [1.3.0](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.2.1...1.3.0) (2022-08-05)
 
 
