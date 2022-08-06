@@ -8,42 +8,18 @@ export interface Snippets {
 	enabled: boolean
 }
 
-export interface SnippetGroup {
-	name: string,
-	snippets: Snippets[],
-	active: boolean,
-	mobile: number
-}
-
 export interface GroupSnippetsSettings {
-	groups: SnippetGroup[],
+	groups: {
+		name: string,
+		snippets: Snippets[],
+		active: boolean
+	}[],
+
 }
 
 // @ts-ignore
 export const DEFAULT_SETTINGS: GroupSnippetsSettings = {
 	groups: [],
-}
-
-function getMobileIcons(group: SnippetGroup): string {
-	if (group.mobile ==1) { //all 
-		return 'workspace-glyph'
-	} else if (group.mobile == 2) { //computer
-		return 'presentation-glyph'
-	} else if (group.mobile == 3){
-        return 'enter'
-	}
-	return ''
-}
-
-function getMobileTooltip(group: SnippetGroup): string {
-	if (group.mobile == 1) {
-		return (t("mobileTooltipAll") as string)
-	} else if (group.mobile == 2) {
-		return (t("mobileTooltipPC") as string)
-	} else if (group.mobile == 3) {
-		return (t("mobileTooltipMobile") as string)
-	}
-	return ''
 }
 
 function getDetailsState(groupName: string) {
@@ -96,7 +72,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 		containerEl.createEl('h2', {text: (t('snippetListHeader') as string)});
 		containerEl.createEl('p', {text: (t('snippetListDesc') as string)});
 		containerEl.createEl('p', {text: t('snippetListHelp') as string});
-		
+
 		new Setting(containerEl)
 			.setName(t('addGroupHeader') as string)
 			.addButton((btn: ButtonComponent) => {
@@ -108,8 +84,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						this.plugin.settings.groups.push({
 							name: result,
 							snippets: [],
-							active: false,
-							mobile: 1
+							active: false
 						});
 						await this.plugin.saveSettings();
 						const detailState = getDetailsState(result);
@@ -129,7 +104,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					this.display();
 					new Notice(t('refreshNotice') as string);
 				})
-			})
+			});
 
 		for (const snippets of this.plugin.settings.groups) {
 			const groupName = snippets.name;
@@ -139,9 +114,6 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 			summary.addClass('group-snippets-summary');
 			const icon = snippets.active ? 'check-in-circle' : 'cross-in-box'
 			const iconDesc = snippets.active ? (t('toggleEverything') as string) : (t('disableEverything') as string);
-			const iconMobile = getMobileIcons(snippets);
-			const mobileTooltip = getMobileTooltip(snippets);
-
 			new Setting(summary)
 				.setClass('group-options')
 				.addButton((btn: ButtonComponent) => {
@@ -152,21 +124,6 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
 					})
 				})
-				.addButton((btn: ButtonComponent) => {
-					btn
-                        .setIcon(iconMobile)
-						.setTooltip(mobileTooltip)
-						.onClick(async () => {
-							snippets.mobile = snippets.mobile +1;
-							if (snippets.mobile > 4){
-								snippets.mobile = 1;
-							}
-							const detailState = getDetailsState(groupName);
-							await this.plugin.saveSettings();
-							this.display();
-							openDetails(groupName, detailState);
-						})
-					})
 				.addButton((btn: ButtonComponent) => {
 					btn
 						.setIcon('trash')
