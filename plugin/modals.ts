@@ -3,32 +3,17 @@ import {GroupSnippetsSettings, Snippets, openDetails} from "./settings";
 import t, {StringFunc} from "./i18n"
 import GroupSnippetsPlugins from "./main";
 
-function getAllSnippets(customCSS: any, settings: GroupSnippetsSettings, groupName: string): Snippets[] {
-	const groups:Snippets[] = []
-	const inThisGroup = settings.groups.find(group => group.name === groupName);
-	for (const snippets of customCSS.snippets) {
-		// @ts-ignore
-		if (inThisGroup.snippets.find(snippet => snippet.snippetName === snippets) === undefined) {
-			groups.push({
-				snippetName: snippets,
-				enabled: true
-			});
-		}
-	}
-	return groups;
-}
-
-export class groupSnippetNaming extends Modal {
+export class GroupSnippetNaming extends Modal {
 	result: string;
 	plugin: GroupSnippetsPlugins;
 	onSubmit: (result: string) => void;
+
 
 	constructor(app: App, plugin: GroupSnippetsPlugins, onSubmit: (result: string) => void) {
 		super(app);
 		this.plugin = plugin;
 		this.onSubmit = onSubmit;
 	}
-
 	onOpen() {
 		const {contentEl} = this;
 		contentEl.createEl('h2', {text: t('groupSnippetNaming') as string});
@@ -70,9 +55,26 @@ export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 		this.groupSnippetsName = groupSnippetsName;
 	}
 
+	getAllSnippets(settings: GroupSnippetsSettings, groupName: string): Snippets[] {
+		// @ts-ignore
+		const customCSS = this.app.customCss;
+		const groups:Snippets[] = []
+		const inThisGroup = settings.groups.find(group => group.name === groupName);
+		for (const snippets of customCSS.snippets) {
+			// @ts-ignore
+			if (inThisGroup.snippets.find(snippet => snippet.snippetName === snippets) === undefined) {
+				groups.push({
+					snippetName: snippets,
+					enabled: true
+				});
+			}
+		}
+		return groups;
+	}
+
+
 	getItems(): Snippets[] {
-		const customCSS = (this.app as any).customCss;
-		return getAllSnippets(customCSS, this.plugin.settings, this.groupSnippetsName);
+		return this.getAllSnippets(this.plugin.settings, this.groupSnippetsName);
 	}
 
 	getItemText(item: Snippets): string {

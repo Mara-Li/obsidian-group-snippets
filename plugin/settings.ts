@@ -1,7 +1,6 @@
-import {App, ButtonComponent, Notice, PluginSettingTab, setIcon, Setting} from "obsidian";
+import {App, ButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
 import GroupSnippetsPlugins from "./main";
-import {toggleEnabledSnippet} from "./main";
-import {groupSnippetNaming, GroupSnippetsModal} from "./modals";
+import {GroupSnippetsModal, GroupSnippetNaming} from "./modals";
 import t from './i18n'
 export interface Snippets {
 	snippetName: string,
@@ -41,17 +40,6 @@ export function openDetails(groupName: string, detailsState: boolean) {
 	}
 }
 
-async function removeDeletedSnippets(customCSS: any, plugin: GroupSnippetsPlugins) {
-	for (const snippets of plugin.settings.groups) {
-		for (const snippet of snippets.snippets) {
-			if (!customCSS.snippets.includes(snippet.snippetName)) {
-				snippets.snippets.splice(snippets.snippets.indexOf(snippet), 1);
-			}
-		}
-	}
-	await plugin.saveSettings();
-}
-
 
 export class GroupSnippetsSettings extends PluginSettingTab {
 	plugin: GroupSnippetsPlugins;
@@ -60,11 +48,22 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
+	async removeDeletedSnippets(plugin: GroupSnippetsPlugins) {
+		// @ts-ignore
+		const customCSS = this.app.customCss;
+		for (const snippets of plugin.settings.groups) {
+			for (const snippet of snippets.snippets) {
+				if (!customCSS.snippets.includes(snippet.snippetName)) {
+					snippets.snippets.splice(snippets.snippets.indexOf(snippet), 1);
+				}
+			}
+		}
+		await plugin.saveSettings();
+	}
 
 	display(): void {
 		const {containerEl} = this;
-		const customCSS = (this.app as any).customCss;
-		removeDeletedSnippets(customCSS, this.plugin);
+		this.removeDeletedSnippets(this.plugin);
 
 
 		containerEl.empty();
@@ -80,7 +79,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					.setIcon('plus')
 					.setTooltip(t('addGroupTooltip') as string)
 					.onClick(async () => {
-					new groupSnippetNaming(this.app, this.plugin, async (result) => {
+					new GroupSnippetNaming(this.app, this.plugin, async (result) => {
 						this.plugin.settings.groups.push({
 							name: result,
 							snippets: [],
@@ -100,7 +99,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					.onClick(() => {
 					const customCSS = (this.app as any).customCss;
 					customCSS.readCssFolders();
-					removeDeletedSnippets(customCSS, this.plugin);
+					this.removeDeletedSnippets(this.plugin);
 					this.display();
 					new Notice(t('refreshNotice') as string);
 				})
@@ -108,7 +107,6 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 
 		for (const snippets of this.plugin.settings.groups) {
 			const groupName = snippets.name;
-			const customCSS = (this.app as any).customCss;
 			const details = containerEl.createEl('details');
 			const summary = details.createEl('summary', {text: groupName});
 			summary.addClass('group-snippets-summary');
@@ -164,7 +162,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						.setTooltip(t('toggleSnippet') as string)
 						.setIcon('command-glyph')
 						.onClick(() => {
-							toggleEnabledSnippet(snippets, customCSS);
+							this.plugin.toggleEnabledSnippet(snippets);
 							const detailState = getDetailsState(groupName);
 							this.display();
 							openDetails(groupName, detailState);

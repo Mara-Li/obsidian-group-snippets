@@ -2,13 +2,6 @@ import {Plugin} from 'obsidian';
 import {GroupSnippetsSettings, DEFAULT_SETTINGS, Snippets} from './settings';
 import t, {StringFunc} from "./i18n"
 
-export function toggleEnabledSnippet(groupSnippet: {name: string, snippets: Snippets[], active:boolean}, customCSS: any) {
-	console.log('Running the group Snippet commands for ' + groupSnippet.name);
-	for (const snippet of groupSnippet.snippets) {
-		customCSS.setCssEnabledStatus(snippet.snippetName, snippet.enabled);
-	}
-}
-
 export default class GroupSnippetsPlugins extends Plugin {
 	settings: GroupSnippetsSettings;
 
@@ -17,18 +10,28 @@ export default class GroupSnippetsPlugins extends Plugin {
 		this.load();
 	}
 
+
+	toggleEnabledSnippet(groupSnippet: {name: string, snippets: Snippets[], active:boolean}) {
+		// @ts-ignore
+		const customCSS = this.app.customCss;
+		console.log('Running the group Snippet commands for ' + groupSnippet.name);
+		for (const snippet of groupSnippet.snippets) {
+			customCSS.setCssEnabledStatus(snippet.snippetName, snippet.enabled);
+		}
+	}
+
 	async onload() {
 		console.log('Enable Group Snippets');
 		await this.loadSettings();
 		const groupSnippets = this.settings.groups;
-		const customCSS = (this.app as any).customCss;
+		// @ts-ignore
 		groupSnippets.forEach(group => {
 			this.addCommand({
 					id: `groupSnippets.${group.name}`,
 					name: (t('commandsName') as StringFunc)(group.name),
 					callback: async () => {
 						console.log((t('commandsName') as StringFunc)(group.name));
-						toggleEnabledSnippet(group, customCSS);
+						this.toggleEnabledSnippet(group);
 						await this.saveSettings();
 					}
 				});
