@@ -1,6 +1,8 @@
-# Obsidian group Snippet
+-> [FR](docs/README_FR.md)
 
-This plugin allow you to set group of CSS snippets to class them and enable them in one click (or command).
+# Obsidian Group Snippet
+
+This plugin allow you to set group of CSS snippets to class them and enable them in one click (or command). Also, this plugin allows you to 'link' a group of snippets to a theme, enabling it when you **switch theme** ! It works also for switching between light & dark theme !
 
 
 ## Usage
@@ -9,25 +11,33 @@ This plugin allow you to set group of CSS snippets to class them and enable them
 2. Add a group (clicking on the + button)
 3. Add a name to the group
 4. Click on the `edit` button to add CSS snippets to the group
-5. Reload the plugin with the `reload group snippets` command **from your command palette**. 
+
 
 After this, you have your group of CSS snippets ! 🎉🎉
 
-So, now, to enable the group, run the command `obsidian group enable group_name`. This commands will enable every snippets "enabled" ! You can check your Appearance tab if you need to check.
-
-You can also run this command directly in the settings, when clicking on the `gear` icon!
 The plugin will enable the **enabled** snippet, and **disable** the disabled snippets!
 
+To run the commands, you can :
+1. From command palette
+	1. `reload snippets` to reload the group of snippets (and the newly added groups)
+	2. `Activate the group : ${groupName}` to activate the group
+2. From directly the settings tab by clicking on the command windows icon.
 
-The `eye` icon allow you to enable **every** snippets in the group or **disable** them.
+You can also enable every snippets in the group by clicking on the `eye` icon. Clicking on the cross will disable every snippets in the group.
+
+
+Also, and it's my game changer here! You can automatically switch group snippets based on your theme or color scheme!
+The switch is based on the **group name**, and the **theme name**. The group name **must** include the theme name, and optionally the color scheme name based on `dark` or `light`. 
+For example, `minimal dark` will be enabled if you switch to the dark theme or from any theme to minimal, in a dark color scheme. 
+
 
 Normally, this plugin can totally override the `Appareance` for Snippets !
 
-🗒️ Some notes : 
-- You need to reload the snippets (using the button refresh) when you remove snippets. But, no worry, the plugin can't activate snippet that doesn't exist ! It's just the list that need some refreshing :).
-- After each addition of group, you need to reload the plugin using the commands : `Reload Group Snippets`
+🗒️ Some notes : You need to reload the snippets (using the button refresh) when you remove snippets. But, no worry, the plugin can't activate snippet that doesn't exist ! It's just the list that need some refreshing :).
 
-![](docs_gif.gif)
+
+![](docs/docs_gif.gif)
+
 
 ## 🤖 Development
 
