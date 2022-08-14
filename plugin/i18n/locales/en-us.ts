@@ -2,6 +2,8 @@ export default {
 	/* ------- Commands ------- */
 	commandsName: (groupName: string) => `Toggle Group: ${groupName}`,
 	reloadGroupCommand: 'Reload Group Snippets',
+	darkTheme: 'dark',
+	lightTheme: 'light',
 
 	/* ------- Settings ------- */
 	snippetListHeader: 'Snippet List',

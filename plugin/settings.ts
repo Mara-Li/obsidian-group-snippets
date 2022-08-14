@@ -8,6 +8,8 @@ export interface Snippets {
 }
 
 export interface GroupSnippetsSettings {
+	enabledTheme: string,
+	isDarkTheme: boolean | null,
 	groups: {
 		name: string,
 		snippets: Snippets[],
@@ -19,6 +21,8 @@ export interface GroupSnippetsSettings {
 // @ts-ignore
 export const DEFAULT_SETTINGS: GroupSnippetsSettings = {
 	groups: [],
+	enabledTheme: '',
+	isDarkTheme: null
 }
 
 function getDetailsState(groupName: string) {
