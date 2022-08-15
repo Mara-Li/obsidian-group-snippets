@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [1.6.1](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.6.0...1.6.1) (2022-08-15)
+
+
+### Bug Fixes
+
+* disabling other snippets when changing color/theme ([bfc6a90](https://github.com/Mara-Li/obsidian-group-snippets/commit/bfc6a906900c9e5942bfa66ac4d7851bdcfcffab))
+
 ## [1.6.0](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.2.1...1.6.0) (2022-08-15)
 
 
