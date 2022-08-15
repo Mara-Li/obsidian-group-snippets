@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.7.0](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.6.1...1.7.0) (2022-08-15)
+
+
+### Features
+
+* allow mobile/desktop snippets ([bf10509](https://github.com/Mara-Li/obsidian-group-snippets/commit/bf10509b8114e52d21606b111d4320c82d00b6e8))
+
 ### [1.6.1](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.6.0...1.6.1) (2022-08-15)
 
 
