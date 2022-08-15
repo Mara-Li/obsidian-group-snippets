@@ -7,14 +7,18 @@ export interface Snippets {
 	enabled: boolean
 }
 
+export interface GroupSnippet{
+	name: string,
+	snippets: Snippets[]
+	active: boolean
+	themeLinked: string,
+	colorScheme: string,
+}
+
 export interface GroupSnippetsSettings {
 	enabledTheme: string,
 	isDarkTheme: boolean | null,
-	groups: {
-		name: string,
-		snippets: Snippets[],
-		active: boolean
-	}[],
+	groups: GroupSnippet[],
 
 }
 
@@ -87,7 +91,9 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						this.plugin.settings.groups.push({
 							name: result,
 							snippets: [],
-							active: false
+							active: false,
+							themeLinked: this.plugin.themeLinkedToGroupSnippet(result),
+							colorScheme: this.plugin.isDarkOrLightColorScheme(result)
 						});
 						await this.plugin.saveSettings();
 						const detailState = getDetailsState(result);
