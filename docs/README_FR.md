@@ -29,7 +29,22 @@ Par exemple, le groupe `minimal dark` sera activé si vous passez du mode clair 
 
 De plus, les snippets liés à d'autres thèmes (ou jeu de couleur) seront désactivés automatiquement 😀 !
 
-Normalement, vous devriez totalement remplacer les paramètres de Snippets !
+Le module peut aussi détecter si un groupe est paramétré uniquement pour mobile ou non et activer automatiquement les snippets correspondants. Pour cela, dans le nom du groupe, il faut mettre : 
+- IOS, Android, Mobile pour les snippets mobiles
+- Desktop, PC, windows, mac, linux pour un groupe de snippets pour un ordinateur
+
+Finally, à chaque fois que vous allez switcher de thème ou de jeu de couleur, le module va basculer[^2] les snippets dont le nom du group contient : 
+- La même plateforme que celle sur laquelle vous êtes
+- Le même thème que celui sur laquelle vous êtes (ou que vous venez de changer)
+- Le même jeu de couleur sur lequel vous êtes (ou que vous venez de changer).
+- N'importe quel snippets qui n'a pas d'indication de plateforme/thèmes/jeu de couleur
+
+Quand vous changez de thème/jeu de couleur, le module va désactiver les snippets qui :
+- N'ont pas la même plateforme que celle sur laquelle vous êtes
+- N'ont pas le même thème que celui sur laquelle vous êtes (ou que vous venez de changer)
+- N'ont pas le même jeu de couleur sur lequel vous êtes (ou que vous venez de changer).
+
+Normalement, vous devriez totalement remplacer les paramètres dans "Extraits CSS" (du panneau d'apparence) !
 
 🗒️ Notes : Vous devez recharger les snippets (en utilisant le bouton de rechargement) quand vous supprimez des snippets. Mais, ne vous inquiétez pas, le module ne peut pas activer un snippet qui n'existe pas ! C'est juste la liste qui a besoin d'être rechargée :).
 
@@ -47,3 +62,4 @@ Normalement, vous devriez totalement remplacer les paramètres de Snippets !
 - [Snippets Commands](https://github.com/deathau/snippet-commands-obsidian)
 
 [^1]: La traduction s'applique ici. Ainsi, vous pouvez utiliser à la fois `dark`, `light` de l'Anglais, mais aussi `sombre` et `clair` du Français.
+[^2]: Ici "basculement" signifie que le module désactivera les snippets désactivés et activera les snippets activés, imitant ainsi le comportement du switch se trouvant dans les "Extraits CSS" du menu d'apparence.
