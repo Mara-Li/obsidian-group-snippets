@@ -13,6 +13,7 @@ export interface GroupSnippet{
 	active: boolean
 	themeLinked: string,
 	colorScheme: string,
+	support: string,
 }
 
 export interface GroupSnippetsSettings {
@@ -93,7 +94,8 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 							snippets: [],
 							active: false,
 							themeLinked: this.plugin.themeLinkedToGroupSnippet(result),
-							colorScheme: this.plugin.isDarkOrLightColorScheme(result)
+							colorScheme: this.plugin.isDarkOrLightColorScheme(result),
+							support: this.plugin.isMobileOrDesktop(result)
 						});
 						await this.plugin.saveSettings();
 						const detailState = getDetailsState(result);

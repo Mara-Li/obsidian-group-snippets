@@ -1,4 +1,4 @@
-import {Plugin} from 'obsidian';
+import {Plugin, Platform} from 'obsidian';
 import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet} from './settings';
 import t, {StringFunc} from "./i18n"
 import enUS from './i18n/locales/en-us';
@@ -9,6 +9,17 @@ export default class GroupSnippetsPlugins extends Plugin {
 	reloadCommands(){
 		this.unload();
 		this.load();
+	}
+
+	isMobileOrDesktop(groupName: string) {
+		const mobile = ['ios', 'android', 'mobile'];
+		const desktop = ['windows', 'mac', 'linux', 'desktop', 'PC'];
+		if (mobile.some((device: string) => groupName.toLowerCase().includes(device.toLowerCase()))) {
+			return 'mobile';
+		} else if (desktop.some((device: string) => groupName.toLowerCase().includes(device.toLowerCase()))) {
+			return 'desktop';
+		}
+		return 'both';
 	}
 
 	isDarkOrLightColorScheme(groupName: string) {
@@ -38,6 +49,18 @@ export default class GroupSnippetsPlugins extends Plugin {
 		const allGroupSnippet = this.settings.groups;
 		const notThisTheme= allGroupSnippet.filter((group: GroupSnippet) => group.themeLinked !== themeName && group.themeLinked !== '');
 		for (const group of notThisTheme) {
+			console.log('Disabling ' + group.name);
+			for (const snippet of group.snippets) {
+				// @ts-ignore
+				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
+			}
+		}
+	}
+
+	disableByPlatform(platform: string) {
+		const allGroupSnippet = this.settings.groups;
+		const notThisPlatform= allGroupSnippet.filter((group: GroupSnippet) => group.support !== platform && group.support !== 'both');
+		for (const group of notThisPlatform) {
 			console.log('Disabling ' + group.name);
 			for (const snippet of group.snippets) {
 				// @ts-ignore
@@ -93,21 +116,28 @@ export default class GroupSnippetsPlugins extends Plugin {
 			const isDarkTheme = this.app.vault.config?.theme === 'obsidian'
 			const wasDarkTheme = this.settings.isDarkTheme;
 			const colorScheme = isDarkTheme ? 'dark' : 'light';
+			const platform = Platform.isDesktop ? 'desktop' : 'mobile';
 			if (newTheme !== currentTheme) {
 				this.disableOtherThemeGroup(newTheme);
-				const groupedSnippetThemed = groupSnippets.filter(group => newTheme === group.themeLinked);
+				this.disableByPlatform(platform);
+				const groupedSnippetThemed = groupSnippets.filter(group => newTheme === group.themeLinked || group.themeLinked === '');
 				for (const group of groupedSnippetThemed) {
-					if (group.colorScheme === colorScheme || group.colorScheme === 'both') {
+					if (
+						(group.colorScheme === colorScheme || group.colorScheme === 'both')
+						&& (platform === group.support || group.support === 'both')
+					)  {
 						this.toggleEnabledSnippet(group);
 					}
 				}
 				this.settings.enabledTheme = newTheme;
 				this.saveSettings();
 			} else if (isDarkTheme !== wasDarkTheme) { //color scheme changement, activate light / dark theme ;; no need to check CSS theme here
-				const groupSnippetThemed = groupSnippets.filter(group => group.colorScheme === colorScheme);
+				const groupSnippetThemed = groupSnippets.filter(group => group.colorScheme === colorScheme || group.colorScheme === 'both');
 				this.disableOtherColorScheme(colorScheme);
+				this.disableByPlatform(platform);
 				for (const group of groupSnippetThemed) {
-					if (group.colorScheme === colorScheme && (group.themeLinked === '' || group.themeLinked === this.settings.enabledTheme)) {
+					if ((group.themeLinked === '' || group.themeLinked === this.settings.enabledTheme)
+						&& (group.support === platform || group.support === 'both')) {
 						this.toggleEnabledSnippet(group);
 					}
 				}
@@ -121,8 +151,11 @@ export default class GroupSnippetsPlugins extends Plugin {
 			if (!group.colorScheme) {
 				group.colorScheme = this.isDarkOrLightColorScheme(group.name);
 			}
-			if (!group.themeLinked) {
+			if (!group.themeLinked || group.themeLinked === '') {
 				group.themeLinked = this.themeLinkedToGroupSnippet(group.name);
+			}
+			if (!group.support) {
+				group.support = this.isMobileOrDesktop(group.name);
 			}
 			this.saveSettings();
 			this.addCommand({
@@ -142,7 +175,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 			id: 'reloadGroupSnippets',
 			name: (t('reloadGroupCommand') as string),
 			callback: async () => {
-                console.log(t('reloadGroupCommand') as string);
+				console.log(t('reloadGroupCommand') as string);
 				this.reloadCommands();
 			}
 		});
