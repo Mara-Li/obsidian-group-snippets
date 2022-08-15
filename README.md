@@ -27,8 +27,10 @@ You can also enable every snippets in the group by clicking on the `eye` icon. C
 
 
 Also, and it's my game changer here! You can automatically switch group snippets based on your theme or color scheme!
-The switch is based on the **group name**, and the **theme name**. The group name **must** include the theme name, and optionally the color scheme name based on `dark` or `light`. 
+The switch is based on the **group name**, and the **theme name**. The group name **must** include the theme name, and optionally the color scheme name based on `dark` or `light`.[^1]
 For example, `minimal dark` will be enabled if you switch to the dark theme or from any theme to minimal, in a dark color scheme. 
+
+Moreover, snippets linked to other theme (or color Scheme) will be disabled 😀 !
 
 
 Normally, this plugin can totally override the `Appareance` for Snippets !
@@ -49,3 +51,5 @@ Normally, this plugin can totally override the `Appareance` for Snippets !
 ## Credit and thanks
 - [MySnippets](https://github.com/chetachiezikeuzor/MySnippets-Plugin)
 - [Snippets Commands](https://github.com/deathau/snippet-commands-obsidian)
+
+[^1]: The translation of the plugin apply for color scheme with addition with the english `dark` and `light`.
