@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [1.7.2](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.7.0...1.7.2) (2022-08-16)
+
+
+### Bug Fixes
+
+* Button misaligned because of absolute ([6022965](https://github.com/Mara-Li/obsidian-group-snippets/commit/6022965a57e17bffb951d9745479a6071fbd4c45))
+* extrabutton for snippets too ([230959a](https://github.com/Mara-Li/obsidian-group-snippets/commit/230959accb4ebe0f8e5e4aecf079e3016d04dde7))
+
 ### [1.7.1](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.7.0...1.7.1) (2022-08-16)
 
 
