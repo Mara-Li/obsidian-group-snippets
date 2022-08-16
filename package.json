@@ -5,7 +5,7 @@
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"vault": "node esbuild.config.mjs production && copy main.js \"I:\\Seed\\.obsidian\\plugins\\obsidian-group-snippets\" && copy styles.css \"I:\\Seed\\.obsidian\\plugins\\obsidian-group-snippets\"",
+		"vault": "node esbuild.config.mjs production && copy main.js \"D:\\Documents\\Seed\\.obsidian\\plugins\\obsidian-group-snippets\" && copy styles.css \"D:\\Documents\\Seed\\.obsidian\\plugins\\obsidian-group-snippets\"",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "commit-and-tag-version",
 		"bump": "node version-bump.mjs",

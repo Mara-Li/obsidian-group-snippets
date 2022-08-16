@@ -1,4 +1,4 @@
-import {App, ButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
+import {App, ButtonComponent, ExtraButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
 import GroupSnippetsPlugins from "./main";
 import {GroupSnippetsModal, GroupSnippetNaming} from "./modals";
 import t from './i18n'
@@ -126,7 +126,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 			const iconDesc = snippets.active ? (t('toggleEverything') as string) : (t('disableEverything') as string);
 			new Setting(summary)
 				.setClass('group-options')
-				.addButton((btn: ButtonComponent) => {
+				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
 						.setIcon('edit')
 						.setTooltip(t('addSnippet') as string)
@@ -134,7 +134,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
 					})
 				})
-				.addButton((btn: ButtonComponent) => {
+				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
 						.setIcon('trash')
 						.setTooltip(t('deleteGroup') as string)
@@ -147,7 +147,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						})
 				})
 
-				.addButton((btn: ButtonComponent) => {
+				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
 						.setIcon(icon)
 						.setTooltip(iconDesc)
@@ -169,7 +169,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 							openDetails(groupName, detailState);
 						})
 				})
-				.addButton((btn) => {
+				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
 						.setTooltip(t('toggleSnippet') as string)
 						.setIcon('command-glyph')
@@ -180,7 +180,6 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 							openDetails(groupName, detailState);
 						})
 				});
-			details.createEl('p');
 			for (const snippet of snippets.snippets) {
 				new Setting(details)
 					.setClass('group-snippet-setting')
