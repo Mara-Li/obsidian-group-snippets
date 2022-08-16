@@ -192,7 +192,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 							this.plugin.saveSettings();
 						});
 					})
-					.addButton((btn: ButtonComponent) => {
+					.addExtraButton((btn: ExtraButtonComponent) => {
 						btn
 							.setIcon('trash')
 							.setTooltip(t('removeSnippet') as string)
