@@ -24,6 +24,12 @@ export default {
 
 	toggleSnippet: 'Toggle the grouped snippets in on/off',
 	removeSnippet: 'Remove this snippet',
+	loglevel: 'Log Level',
+	loglevelDesc: 'The log level for the plugin.',
+	logInfo: 'Info',
+	logWarn: 'Warning',
+	logError: 'Error',
+	logNone: 'None',
 
 	/* --- Modal ---- */
 	groupSnippetNaming: 'Group Snippet Name',

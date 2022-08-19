@@ -20,14 +20,22 @@ export interface GroupSnippetsSettings {
 	enabledTheme: string,
 	isDarkTheme: boolean | null,
 	groups: GroupSnippet[],
+	log: string
+}
 
+export enum LogLevel {
+	info = 'info',
+	warn = 'warn',
+	error = 'error',
+	none = 'none',
 }
 
 // @ts-ignore
 export const DEFAULT_SETTINGS: GroupSnippetsSettings = {
 	groups: [],
 	enabledTheme: '',
-	isDarkTheme: null
+	isDarkTheme: null,
+	log: LogLevel.none
 }
 
 function getDetailsState(groupName: string) {
@@ -205,6 +213,25 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						})
 					});
 			}
+
 		}
+		new Setting(containerEl)
+			.setName(t('loglevel') as string)
+			.setDesc(t('loglevelDesc') as string)
+			.addDropdown((dropdown) => {
+				dropdown
+					.addOptions({
+						'info': t('logInfo') as string,
+						'warn': t('logWarn') as string,
+						'error': t('logError') as string,
+						'none': t('logNone') as string
+					})
+					.setValue(this.plugin.settings.log)
+					.onChange((value) => {
+						this.plugin.settings.log = value;
+						this.plugin.saveSettings();
+					});
+			});
 	}
+
 }

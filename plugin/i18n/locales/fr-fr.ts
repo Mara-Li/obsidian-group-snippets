@@ -25,6 +25,14 @@ export default {
 	toggleSnippet: 'Activer/désactiver les snippets du groupe',
 	removeSnippet: 'Supprimer ce snippet',
 
+	loglevel: 'Niveau de log',
+	loglevelDesc: 'Le niveau de log pour le module',
+	logInfo: 'Info',
+	logWarn: 'Avertissement',
+	logError: 'Erreur',
+	logNone: 'Aucun',
+
+
 	/* --- Modal ---- */
 	groupSnippetNaming: 'Nom du groupe de snippets',
 	submitButton: 'Valider',

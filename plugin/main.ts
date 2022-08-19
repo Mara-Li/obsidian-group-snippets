@@ -1,5 +1,5 @@
 import {Plugin, Platform} from 'obsidian';
-import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet} from './settings';
+import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel} from './settings';
 import t, {StringFunc} from "./i18n"
 import enUS from './i18n/locales/en-us';
 
@@ -9,6 +9,16 @@ export default class GroupSnippetsPlugins extends Plugin {
 	reloadCommands(){
 		this.unload();
 		this.load();
+	}
+
+	logging(message: string) {
+		if (this.settings.log === LogLevel.warn) {
+			console.warn(message);
+		} else if (this.settings.log === LogLevel.error) {
+			console.error(message);
+		} else if (this.settings.log === LogLevel.info) {
+			console.info(message);
+		}
 	}
 
 	isMobileOrDesktop(groupName: string) {
@@ -49,7 +59,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		const allGroupSnippet = this.settings.groups;
 		const notThisTheme= allGroupSnippet.filter((group: GroupSnippet) => group.themeLinked !== themeName && group.themeLinked !== '');
 		for (const group of notThisTheme) {
-			console.log('Disabling ' + group.name);
+			this.logging('Disabling ' + group.name);
 			for (const snippet of group.snippets) {
 				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
@@ -61,7 +71,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		const allGroupSnippet = this.settings.groups;
 		const notThisPlatform= allGroupSnippet.filter((group: GroupSnippet) => group.support !== platform && group.support !== 'both');
 		for (const group of notThisPlatform) {
-			console.log('Disabling ' + group.name);
+			this.logging('Disabling ' + group.name);
 			for (const snippet of group.snippets) {
 				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
@@ -73,7 +83,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		const allGroupSnippet = this.settings.groups;
 		const notThisColorScheme= allGroupSnippet.filter((group: GroupSnippet) => group.colorScheme !== colorScheme && group.colorScheme !== 'both');
 		for (const group of notThisColorScheme) {
-			console.log('Disabling ' + group.name);
+			this.logging('Disabling ' + group.name);
 			for (const snippet of group.snippets) {
 				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
@@ -84,7 +94,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 	toggleEnabledSnippet(groupSnippet: GroupSnippet) {
 		// @ts-ignore
 		const customCSS = this.app.customCss;
-		console.log('Running the group Snippet commands for ' + groupSnippet.name);
+		this.logging('Running the group Snippet commands for ' + groupSnippet.name);
 		for (const snippet of groupSnippet.snippets) {
 			customCSS.setCssEnabledStatus(snippet.snippetName, snippet.enabled);
 		}
@@ -162,7 +172,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 					id: `groupSnippets.${group.name}`,
 					name: (t('commandsName') as StringFunc)(group.name),
 					callback: async () => {
-						console.log((t('commandsName') as StringFunc)(group.name));
+						this.logging((t('commandsName') as StringFunc)(group.name));
 						this.toggleEnabledSnippet(group);
 						await this.saveSettings();
 					}
@@ -175,7 +185,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 			id: 'reloadGroupSnippets',
 			name: (t('reloadGroupCommand') as string),
 			callback: async () => {
-				console.log(t('reloadGroupCommand') as string);
+				this.logging(t('reloadGroupCommand') as string);
 				this.reloadCommands();
 			}
 		});
