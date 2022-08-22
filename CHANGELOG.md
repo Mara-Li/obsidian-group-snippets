@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [1.8.1](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.8.0...1.8.1) (2022-08-22)
+
+
+### Bug Fixes
+
+* typo in language and summary when adding snippets ([fc01939](https://github.com/Mara-Li/obsidian-group-snippets/commit/fc01939e96cc9a5096a98bc0139fab54597c3c04))
+
 ## [1.8.0](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.7.0...1.8.0) (2022-08-19)
 
 
