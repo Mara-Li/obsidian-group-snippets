@@ -138,8 +138,12 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					btn
 						.setIcon('edit')
 						.setTooltip(t('addSnippet') as string)
-						.onClick(async () => {
+						.onClick( () => {
 						new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
+						const detailState = getDetailsState(groupName);
+							this.plugin.saveSettings();
+							this.display();
+							openDetails(groupName, detailState);
 					})
 				})
 				.addExtraButton((btn: ExtraButtonComponent) => {

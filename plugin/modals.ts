@@ -89,6 +89,6 @@ export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 		}
 		this.plugin.saveSettings();
 		this.settings.display();
-		openDetails(this.groupSnippetsName, false);
+		openDetails(this.groupSnippetsName, true);
 	}
 }
