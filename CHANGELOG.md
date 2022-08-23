@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [1.8.2](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.8.1...1.8.2) (2022-08-23)
+
+
+### Bug Fixes
+
+* add a notification after activation's group ([085505f](https://github.com/Mara-Li/obsidian-group-snippets/commit/085505fe30f761cf171971cb7e169af0d53847eb))
+* button misaligned on mobile ([db65e3c](https://github.com/Mara-Li/obsidian-group-snippets/commit/db65e3c13f7591ab9fe375a8c0d0f09d2bee4876))
+
 ### [1.8.1](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.8.0...1.8.1) (2022-08-22)
 
 
