@@ -11,3 +11,8 @@ summary.group-snippets-summary {
 	top: -1em;
 	position: relative;
 }
+
+
+.is-mobile .setting-item.group-options .setting-item-control {
+	margin-top: 0 !important;
+}
