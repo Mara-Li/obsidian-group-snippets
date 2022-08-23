@@ -1,4 +1,4 @@
-import {Plugin, Platform} from 'obsidian';
+import {Plugin, Platform, Notice} from 'obsidian';
 import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel} from './settings';
 import t, {StringFunc} from "./i18n"
 import enUS from './i18n/locales/en-us';
@@ -98,6 +98,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		for (const snippet of groupSnippet.snippets) {
 			customCSS.setCssEnabledStatus(snippet.snippetName, snippet.enabled);
 		}
+		new Notice((t('enablingGroup') as StringFunc)(groupSnippet.name))
 	}
 
 	async onload() {
