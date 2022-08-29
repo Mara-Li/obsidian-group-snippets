@@ -45,7 +45,11 @@ export default class GroupSnippetsPlugins extends Plugin {
 
 	themeLinkedToGroupSnippet(groupName: string) {
 		// @ts-ignore
-		const downloadedTheme = this.app.customCss.themes;
+		const newObsidianThemes = Object.keys(this.app.customCss.themes);
+		// @ts-ignore
+		const legacyThemes = this.app.customCss.oldThemes;
+		const downloadedTheme = [...newObsidianThemes, ...legacyThemes];
+		
 		for (const theme of downloadedTheme) {
 			const themeName = theme.replace(/(-{2,}|_)/, '-').split('-');
 			if (themeName.some((name: string) => groupName.toLowerCase().includes(name.toLowerCase()))) {
@@ -118,7 +122,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		}
 
 		const groupSnippets = this.settings.groups;
-
+		
 		this.registerEvent(this.app.workspace.on('css-change', () => {
 			const currentTheme = this.settings.enabledTheme;
 			// @ts-ignore
@@ -129,9 +133,25 @@ export default class GroupSnippetsPlugins extends Plugin {
 			const colorScheme = isDarkTheme ? 'dark' : 'light';
 			const platform = Platform.isDesktop ? 'desktop' : 'mobile';
 			if (newTheme !== currentTheme) {
+				console.error(newTheme + ' !== ' + currentTheme);
 				this.disableOtherThemeGroup(newTheme);
 				this.disableByPlatform(platform);
-				const groupedSnippetThemed = groupSnippets.filter(group => newTheme === group.themeLinked || group.themeLinked === '');
+				const groupedSnippetThemed: GroupSnippet[] = [];
+				for (const group of groupSnippets) {
+					if (group.themeLinked === '') {
+						groupedSnippetThemed.push(group);
+					} else if (group.themeLinked === newTheme) {
+						groupedSnippetThemed.push(group);
+					}
+					else  {
+						const excludedWord = ['BRAT', 'obsidian', '']
+						const themes = group.themeLinked.split('-').filter(theme=> !excludedWord.includes(theme)).map(theme => theme.toLowerCase());
+						const newThemes = newTheme.split('-').filter((theme: string)=> !excludedWord.includes(theme)).map((theme: string)=> theme.toLowerCase());
+						if (themes.some(theme => newThemes.includes(theme))) {
+							groupedSnippetThemed.push(group);
+						}
+					}
+				}
 				for (const group of groupedSnippetThemed) {
 					if (
 						(group.colorScheme === colorScheme || group.colorScheme === 'both')
