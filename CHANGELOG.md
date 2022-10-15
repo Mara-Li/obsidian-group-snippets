@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [1.8.3](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.8.3-0...1.8.3) (2022-10-15)
+
+
+### Bug Fixes
+
+* update minApp version for manifest-beta.json ([e0126fe](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/e0126fe1c96d363e7d0e0407fb1fafac831bc3f3))
+
 ### [1.8.3-0](https://github.com/Mara-Li/obsidian-group-snippets/compare/1.8.1...1.8.3-0) (2022-08-29)
 
 

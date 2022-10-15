@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-group-snippets",
-	"version": "1.8.3-0",
+	"version": "1.8.3",
 	"description": "Create folder of snippets to activate them in one click ! ",
 	"main": "main.js",
 	"scripts": {
@@ -34,7 +34,7 @@
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
 		"esbuild": "0.14.47",
-		"obsidian": "latest",
+		"obsidian": "^0.16.3",
 		"tslib": "2.4.0",
 		"typescript": "4.7.4"
 	},
