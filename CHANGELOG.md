@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+### [1.8.4](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.8.3...1.8.4) (2022-10-31)
+
 ### [1.8.3](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.8.3-0...1.8.3) (2022-10-15)
 
 

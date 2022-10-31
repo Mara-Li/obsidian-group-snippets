@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-group-snippets",
-	"version": "1.8.3",
+	"version": "1.8.4",
 	"description": "Create folder of snippets to activate them in one click ! ",
 	"main": "main.js",
 	"scripts": {
