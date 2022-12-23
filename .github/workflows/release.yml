@@ -13,9 +13,9 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@latest
             - name: Use Node.js
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@latest
               with:
                   node-version: 18
 
@@ -28,11 +28,11 @@ jobs:
                   cp main.js manifest.json plugin/styles.css ${{ env.PLUGIN_NAME }}
                   zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
                   ls
-                  echo "::set-output name=tag_name::$(git tag --sort version:refname | tail -n 1)"
+                  echo "tag_name=$(git tag --sort version:refname | tail -n 1)" >> $GITHUB_OUTPUT
                   npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
             - name: Create Release
               id: create_release
-              uses: actions/create-release@v1
+              uses: actions/create-release@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   VERSION: ${{ github.ref }}
@@ -45,7 +45,7 @@ jobs:
 
             - name: Upload zip file
               id: upload-zip
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -56,7 +56,7 @@ jobs:
 
             - name: Upload main.js
               id: upload-main
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -67,7 +67,7 @@ jobs:
 
             - name: Upload manifest.json
               id: upload-manifest
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
@@ -78,7 +78,7 @@ jobs:
         
             - name: Upload styles.css
               id: upload-css
-              uses: actions/upload-release-asset@v1
+              uses: actions/upload-release-asset@latest
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
