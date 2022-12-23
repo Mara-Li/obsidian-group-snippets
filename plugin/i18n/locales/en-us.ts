@@ -1,6 +1,7 @@
 export default {
 	/* ------- Commands ------- */
 	commandsName: (groupName: string) => `Toggle Group: ${groupName}`,
+	addSnippets: (snippets:{name: string, groupName: string}) => `Adding ${snippets.name} to ${snippets.groupName}`,
 	enablingGroup: (groupName: string) => `The group ${groupName} has been activated.`,
 	reloadGroupCommand: 'Reload Group Snippets',
 	darkTheme: 'dark',

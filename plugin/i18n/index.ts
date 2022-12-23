@@ -35,7 +35,7 @@ const localeMap: { [k: string]: Partial<typeof enUS> } = {
 const locale = localeMap[moment.locale()];
 
 export interface StringFunc {
-  (params: string|string[]): string;
+  (params: string|string[]|{name: string, groupName: string}): string;
 }
 
 export default function t(str: keyof typeof enUS): string | StringFunc {
