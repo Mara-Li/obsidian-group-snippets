@@ -15,7 +15,7 @@ export function OpenAllDetails(detailsState: {name: string}[]) {
 	for (let i = 0; i < document.getElementsByTagName('details').length; i++) {
 		const details = document.getElementsByTagName('details')[i] as HTMLDetailsElement;
 		for (let j = 0; j < detailsState.length; j++) {
-			if (details.innerText === detailsState[j].name) {
+			if (details.innerText === detailsState[j].name && !details.open) {
 				details.open = true;
 			}
 		}

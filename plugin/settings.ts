@@ -38,6 +38,7 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName(t('addGroupHeader') as string)
+			.setClass('group-snippets-button-container')
 			.addButton((btn: ButtonComponent) => {
 				btn
 					.setIcon('plus')
@@ -113,6 +114,11 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 						.setIcon(icon)
 						.setTooltip(iconDesc)
 						.onClick(async () => {
+							//disable the click on the summary
+							summary.addEventListener('click', (e) => {
+								e.preventDefault();
+							});
+							
 							if (snippets.active) {
 								snippets.active = false;
 								snippets.snippets.forEach(snippet => {
@@ -124,6 +130,7 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 									snippet.enabled = false;
 								})
 							}
+							
 							const detailState = getAllDetailsState();
 							await this.plugin.saveSettings();
 							this.display();
@@ -135,6 +142,9 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 						.setTooltip(t('toggleSnippet') as string)
 						.setIcon('command-glyph')
 						.onClick(async () => {
+							summary.addEventListener('click', (e) => {
+								e.preventDefault();
+							});
 							this.plugin.toggleEnabledSnippet(snippets);
 							const detailState = getAllDetailsState();
 							await this.plugin.saveSettings();
@@ -150,8 +160,8 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 						toggle
 							.setValue(snippet.enabled)
 							.onChange(async (value) => {
-							snippet.enabled = value;
-							await this.plugin.saveSettings();
+								snippet.enabled = value;
+								await this.plugin.saveSettings();
 						});
 					})
 					.addExtraButton((btn: ExtraButtonComponent) => {
@@ -172,6 +182,7 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName(t('loglevel') as string)
 			.setDesc(t('loglevelDesc') as string)
+			.setClass('group-snippets-loglevel')
 			.addDropdown((dropdown) => {
 				dropdown
 					.addOptions({
