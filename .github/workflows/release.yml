@@ -33,7 +33,7 @@ jobs:
                   npx rexreplace "^.*?#+\s\[.*?\n.*?(?=\s*#+\s\[)" "_" -s -M -G -m -o "CHANGELOG.md" > CHANGELOG-LATEST.md
             - name: Create Release
               id: create_release
-              uses: actions/create-release@v6
+              uses: actions/create-release@v1
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   VERSION: ${{ github.ref }}
