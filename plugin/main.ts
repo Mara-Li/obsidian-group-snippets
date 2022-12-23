@@ -1,5 +1,6 @@
 import {Plugin, Platform, Notice} from 'obsidian';
-import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel} from './settings';
+import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel} from './interface';
+import {GroupSnippetsSettingsTabs} from './settings';
 import t, {StringFunc} from "./i18n"
 import enUS from './i18n/locales/en-us';
 
@@ -200,7 +201,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 				});
 
 		})
-		this.addSettingTab(new GroupSnippetsSettings(this.app, this));
+		this.addSettingTab(new GroupSnippetsSettingsTabs(this.app, this));
 
 		this.addCommand({
 			id: 'reloadGroupSnippets',
@@ -213,7 +214,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 	}
 
 	onunload() {
-
+		console.log('unloading GROUP SNIPPETS plugin');
 	}
 
 	async loadSettings() {
