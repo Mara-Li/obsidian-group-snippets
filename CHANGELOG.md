@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.9.0](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.8.6...1.9.0) (2022-12-23)
+
+
+### Features
+
+* more option for interface ([3167ec4](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/3167ec44067de0914897a8d64041e373065794d7))
+
+
+### Bug Fixes
+
+* prevent strange things with click on little button ([c6452cf](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/c6452cf43220be727d0d3533002bef45c37ad73d))
+
 ### [1.8.6](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.8.5...1.8.6) (2022-12-23)
 
 
