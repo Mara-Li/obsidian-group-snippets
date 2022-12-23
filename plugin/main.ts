@@ -1,5 +1,5 @@
 import {Plugin, Platform, Notice} from 'obsidian';
-import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel} from './interface';
+import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel, WhichPlatform} from './interface';
 import {GroupSnippetsSettingsTabs} from './settings';
 import t, {StringFunc} from "./i18n"
 import enUS from './i18n/locales/en-us';
@@ -23,12 +23,26 @@ export default class GroupSnippetsPlugins extends Plugin {
 	}
 
 	isMobileOrDesktop(groupName: string) {
-		const mobile = ['ios', 'android', 'mobile'];
-		const desktop = ['windows', 'mac', 'linux', 'desktop', 'PC'];
-		if (mobile.some((device: string) => groupName.toLowerCase().includes(device.toLowerCase()))) {
-			return 'mobile';
-		} else if (desktop.some((device: string) => groupName.toLowerCase().includes(device.toLowerCase()))) {
-			return 'desktop';
+		const name = groupName.toLowerCase();
+		//add more precise support
+		if (name.includes('ios')) {
+			return 'isIosApp';
+		} else if (name.includes('android')) {
+			return 'isAndroidApp';
+		} else if (name.includes('mobile')) {
+			return 'isMobile'; //include ios and android ; Tablet & Phone size
+		} else if (name.includes('phone')) {
+			return 'isPhone'; //Phone size
+		} else if (name.includes('win') || name.includes('windows')) {
+			return 'isWin';
+		} else if (name.includes('mac') || name.includes('macos')) {
+			return 'isMacOS';
+		} else if (name.includes('linux')) {
+			return 'isLinux';
+		} else if (name.includes('tablet')) {
+			return 'isTablet';
+		} else if (name.includes('desktop') || name.includes('pc')) {
+			return 'isDesktop';
 		}
 		return 'both';
 	}
@@ -71,10 +85,43 @@ export default class GroupSnippetsPlugins extends Plugin {
 			}
 		}
 	}
+	
+	enableByPlatform(platform: WhichPlatform, activatedSnippets: GroupSnippet) {
+		if (activatedSnippets.support === 'both') {
+			return true;
+		}
+		
+		const isThisPlatform = Object.entries(platform).filter((support: [string, boolean]) => support[1]);
+		
+		for (const support of isThisPlatform) {
+			if (activatedSnippets.support === support[0]) {
+				return true;
+			} else if (activatedSnippets.support === "mobile" && support[0] === "isMobile") {
+				return true;
+			} else if (activatedSnippets.support === "desktop" && support[0] === "isDesktop") {
+				return true;
+			}
+		}
+		return false;
+	}
 
-	disableByPlatform(platform: string) {
+	disableByPlatform(platform: WhichPlatform) {
 		const allGroupSnippet = this.settings.groups;
-		const notThisPlatform= allGroupSnippet.filter((group: GroupSnippet) => group.support !== platform && group.support !== 'both');
+		const notThis: string[] = [];
+		for (const support of Object.entries(platform)) {
+			if (!support[1]) {
+				notThis.push(support[0]);
+			}
+		}
+		allGroupSnippet.forEach((group: GroupSnippet) => {
+			if (group.support === 'desktop') {
+				group.support = 'isDesktop';
+			} else if (group.support === 'mobile') {
+				group.support = 'isMobile';
+			}
+			return group;
+		});
+		const notThisPlatform = allGroupSnippet.filter((group: GroupSnippet) => notThis.includes(group.support));
 		for (const group of notThisPlatform) {
 			this.logging('Disabling ' + group.name);
 			for (const snippet of group.snippets) {
@@ -109,6 +156,22 @@ export default class GroupSnippetsPlugins extends Plugin {
 	async onload() {
 		console.log('Enable Group Snippets');
 		await this.loadSettings();
+		// @ts-ignore
+		const platform: WhichPlatform = {
+			isDesktop : Platform.isDesktop,
+			// @ts-ignore
+			isWin: Platform.isWin,
+			isMobile : Platform.isMobile,
+			isIosApp: Platform.isIosApp,
+			isAndroidApp: Platform.isAndroidApp,
+			// @ts-ignore
+			isPhone: Platform.isPhone,
+			// @ts-ignore
+			isTablet: Platform.isTablet,
+			isMacOS: Platform.isMacOS && !Platform.isIosApp,
+			// @ts-ignore
+			isLinux: Platform.isLinux,
+		};
 		const enabledTheme = this.settings.enabledTheme;
 		if (!enabledTheme || enabledTheme.length === 0) {
 			// @ts-ignore
@@ -132,9 +195,9 @@ export default class GroupSnippetsPlugins extends Plugin {
 			const isDarkTheme = this.app.vault.config?.theme === 'obsidian'
 			const wasDarkTheme = this.settings.isDarkTheme;
 			const colorScheme = isDarkTheme ? 'dark' : 'light';
-			const platform = Platform.isDesktop ? 'desktop' : 'mobile';
+
 			if (newTheme !== currentTheme) {
-				console.error(newTheme + ' !== ' + currentTheme);
+				this.logging(newTheme + ' !== ' + currentTheme);
 				this.disableOtherThemeGroup(newTheme);
 				this.disableByPlatform(platform);
 				const groupedSnippetThemed: GroupSnippet[] = [];
@@ -156,7 +219,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 				for (const group of groupedSnippetThemed) {
 					if (
 						(group.colorScheme === colorScheme || group.colorScheme === 'both')
-						&& (platform === group.support || group.support === 'both')
+						&& (this.enableByPlatform(platform, group) || group.support === 'both')
 					)  {
 						this.toggleEnabledSnippet(group);
 					}
@@ -169,7 +232,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 				this.disableByPlatform(platform);
 				for (const group of groupSnippetThemed) {
 					if ((group.themeLinked === '' || group.themeLinked === this.settings.enabledTheme)
-						&& (group.support === platform || group.support === 'both')) {
+						&& (this.enableByPlatform(platform, group) || group.support === 'both')) {
 						this.toggleEnabledSnippet(group);
 					}
 				}

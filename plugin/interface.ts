@@ -4,6 +4,18 @@ export interface Snippets {
 	enabled: boolean
 }
 
+export interface WhichPlatform {
+    "isDesktop": boolean,
+    "isMobile": boolean,
+    "isIosApp": boolean,
+    "isAndroidApp": boolean,
+    "isPhone": boolean,
+    "isTablet": boolean,
+    "isMacOS": boolean,
+    "isWin": boolean,
+    "isLinux": boolean,
+}
+
 export interface GroupSnippet{
 	name: string,
 	snippets: Snippets[]
