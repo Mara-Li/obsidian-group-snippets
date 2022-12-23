@@ -2,63 +2,10 @@ import {App, ButtonComponent, ExtraButtonComponent, Notice, PluginSettingTab, Se
 import GroupSnippetsPlugins from "./main";
 import {GroupSnippetsModal, GroupSnippetNaming} from "./modals";
 import t from './i18n'
-export interface Snippets {
-	snippetName: string,
-	enabled: boolean
-}
-
-export interface GroupSnippet{
-	name: string,
-	snippets: Snippets[]
-	active: boolean
-	themeLinked: string,
-	colorScheme: string,
-	support: string,
-}
-
-export interface GroupSnippetsSettings {
-	enabledTheme: string,
-	isDarkTheme: boolean | null,
-	groups: GroupSnippet[],
-	log: string
-}
-
-export enum LogLevel {
-	info = 'info',
-	warn = 'warn',
-	error = 'error',
-	none = 'none',
-}
-
-// @ts-ignore
-export const DEFAULT_SETTINGS: GroupSnippetsSettings = {
-	groups: [],
-	enabledTheme: '',
-	isDarkTheme: null,
-	log: LogLevel.none
-}
-
-function getDetailsState(groupName: string) {
-	for (let i = 0; i < document.getElementsByTagName('details').length; i++) {
-		const details = document.getElementsByTagName('details')[i] as HTMLDetailsElement;
-		if (details.innerText === groupName) {
-			return details.open;
-		}
-	}
-	return true;
-}
-
-export function openDetails(groupName: string, detailsState: boolean) {
-	for (let i = 0; i < document.getElementsByTagName('details').length; i++) {
-		const details = document.getElementsByTagName('details')[i] as HTMLDetailsElement;
-		if (details.innerText === groupName && detailsState) {
-			details.open = true;
-		}
-	}
-}
+import {getAllDetailsState, OpenAllDetails} from "./utils";
 
 
-export class GroupSnippetsSettings extends PluginSettingTab {
+export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 	plugin: GroupSnippetsPlugins;
 
 	constructor(app: App, plugin: GroupSnippetsPlugins) {
@@ -106,9 +53,9 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 							support: this.plugin.isMobileOrDesktop(result)
 						});
 						await this.plugin.saveSettings();
-						const detailState = getDetailsState(result);
+						const detailState = getAllDetailsState();
 						this.display();
-						openDetails(result, detailState);
+						OpenAllDetails(detailState);
 					}).open();
 				})
 			})
@@ -116,18 +63,20 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 				btn
 					.setIcon('switch')
 					.setTooltip(t('refreshToolTip') as string)
-					.onClick(() => {
-					const customCSS = (this.app as any).customCss;
-					customCSS.readCssFolders();
-					this.removeDeletedSnippets(this.plugin);
-					this.display();
-					new Notice(t('refreshNotice') as string);
+					.onClick(async () => {
+						//@ts-ignore
+						const customCSS = (this.app as unknown).customCss;
+						customCSS.readCssFolders();
+						await this.removeDeletedSnippets(this.plugin);
+						this.display();
+						new Notice(t('refreshNotice') as string);
 				})
 			});
 
 		for (const snippets of this.plugin.settings.groups) {
 			const groupName = snippets.name;
 			const details = containerEl.createEl('details');
+			details.addClass('group-snippets-details');
 			const summary = details.createEl('summary', {text: groupName});
 			summary.addClass('group-snippets-summary');
 			const icon = snippets.active ? 'check-in-circle' : 'cross-in-box'
@@ -138,12 +87,12 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					btn
 						.setIcon('edit')
 						.setTooltip(t('addSnippet') as string)
-						.onClick( () => {
-						new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
-						const detailState = getDetailsState(groupName);
-							this.plugin.saveSettings();
+						.onClick( async () => {
+							new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
+							const detailState = getAllDetailsState();
+							await this.plugin.saveSettings();
 							this.display();
-							openDetails(groupName, detailState);
+							OpenAllDetails(detailState);
 					})
 				})
 				.addExtraButton((btn: ExtraButtonComponent) => {
@@ -152,10 +101,10 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						.setTooltip(t('deleteGroup') as string)
 						.onClick(async () => {
 							this.plugin.settings.groups = this.plugin.settings.groups.filter(group => group.name !== groupName);
+							const detailState = getAllDetailsState();
 							await this.plugin.saveSettings();
-							const detailState = getDetailsState(groupName);
 							this.display();
-							openDetails(groupName, detailState);
+							OpenAllDetails(detailState);
 						})
 				})
 
@@ -163,7 +112,7 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					btn
 						.setIcon(icon)
 						.setTooltip(iconDesc)
-						.onClick(() => {
+						.onClick(async () => {
 							if (snippets.active) {
 								snippets.active = false;
 								snippets.snippets.forEach(snippet => {
@@ -175,21 +124,22 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 									snippet.enabled = false;
 								})
 							}
-							const detailState = getDetailsState(groupName);
-							this.plugin.saveSettings();
+							const detailState = getAllDetailsState();
+							await this.plugin.saveSettings();
 							this.display();
-							openDetails(groupName, detailState);
+							OpenAllDetails(detailState);
 						})
 				})
 				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
 						.setTooltip(t('toggleSnippet') as string)
 						.setIcon('command-glyph')
-						.onClick(() => {
+						.onClick(async () => {
 							this.plugin.toggleEnabledSnippet(snippets);
-							const detailState = getDetailsState(groupName);
+							const detailState = getAllDetailsState();
+							await this.plugin.saveSettings();
 							this.display();
-							openDetails(groupName, detailState);
+							OpenAllDetails(detailState);
 						})
 				});
 			for (const snippet of snippets.snippets) {
@@ -199,21 +149,21 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 					.addToggle((toggle) => {
 						toggle
 							.setValue(snippet.enabled)
-							.onChange((value) => {
+							.onChange(async (value) => {
 							snippet.enabled = value;
-							this.plugin.saveSettings();
+							await this.plugin.saveSettings();
 						});
 					})
 					.addExtraButton((btn: ExtraButtonComponent) => {
 						btn
 							.setIcon('trash')
 							.setTooltip(t('removeSnippet') as string)
-							.onClick(() => {
+							.onClick(async () => {
 							snippets.snippets.splice(snippets.snippets.indexOf(snippet), 1);
-							this.plugin.saveSettings();
-							const detailState = getDetailsState(groupName);
+							const detailState = getAllDetailsState();
+							await this.plugin.saveSettings();
 							this.display();
-							openDetails(groupName, detailState);
+							OpenAllDetails(detailState);
 						})
 					});
 			}
@@ -231,9 +181,9 @@ export class GroupSnippetsSettings extends PluginSettingTab {
 						'none': t('logNone') as string
 					})
 					.setValue(this.plugin.settings.log)
-					.onChange((value) => {
+					.onChange(async (value) => {
 						this.plugin.settings.log = value;
-						this.plugin.saveSettings();
+						await this.plugin.saveSettings();
 					});
 			});
 	}
