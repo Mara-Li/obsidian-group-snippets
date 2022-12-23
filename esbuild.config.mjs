@@ -26,7 +26,7 @@ esbuild.build({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ['plugin/main.ts'],
+	entryPoints: ['plugin/main.ts', "plugin/styles.css"],
 	bundle: true,
 	external: ['obsidian', 'electron', ...builtins],
 	sourcemap: prod ? false : "inline",

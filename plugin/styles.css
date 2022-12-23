@@ -8,12 +8,12 @@ summary.group-snippets-summary {
 }
 
 .setting-item.group-options {
-	top: -1em;
+	top: -1.2em;
 	position: relative;
 }
 
 
-.is-mobile .setting-item.group-options .setting-item-control {
+.is-phone .setting-item.group-options .setting-item-control {
 	margin-top: -2em !important;
 }
 
@@ -35,3 +35,7 @@ details > summary.group-snippets-summary::before {
 	margin-right: 5px;
 }
 
+.group-snippets-loglevel {
+	border: none;
+	margin-top: 30px;
+}
