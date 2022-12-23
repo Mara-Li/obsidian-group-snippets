@@ -1,7 +1,9 @@
 import {App, FuzzySuggestModal, Modal, Notice, Setting} from "obsidian";
-import {GroupSnippetsSettings, Snippets, openDetails} from "./settings";
+import {GroupSnippet, GroupSnippetsSettings, Snippets} from "./interface";
+import {OpenAllDetails, getAllDetailsState} from "./utils";
 import t, {StringFunc} from "./i18n"
 import GroupSnippetsPlugins from "./main";
+import {GroupSnippetsSettingsTabs} from "./settings";
 
 export class GroupSnippetNaming extends Modal {
 	result: string;
@@ -45,13 +47,13 @@ export class GroupSnippetNaming extends Modal {
 export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 	app: App
 	plugin: GroupSnippetsPlugins;
-	settings: GroupSnippetsSettings;
+	settings: GroupSnippetsSettingsTabs;
 	groupSnippetsName: string;
 
-	constructor(app: App, plugin: GroupSnippetsPlugins, settings: GroupSnippetsSettings, groupSnippetsName: string) {
+	constructor(app: App, plugin: GroupSnippetsPlugins, settingsTab: GroupSnippetsSettingsTabs, groupSnippetsName: string) {
 		super(app);
 		this.plugin = plugin;
-		this.settings = settings;
+		this.settings = settingsTab;
 		this.groupSnippetsName = groupSnippetsName;
 	}
 
@@ -82,13 +84,17 @@ export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 	}
 
 	onChooseItem(item: Snippets, evt: MouseEvent | KeyboardEvent) {
-		new Notice((t('commandsName') as StringFunc)(item.snippetName));
-		if (this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName) !== undefined) {
+		const groupSnippets: GroupSnippet | undefined = this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName);
+		if (groupSnippets !== undefined) {
 			// @ts-ignore
 			this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName).snippets.push(item);
+			// @ts-ignore
+			const addedSnippets:{name: string, groupName: string} = {name: item.snippetName, groupName: this.groupSnippetsName};
+			new Notice((t('addSnippets') as StringFunc)(addedSnippets));
 		}
+		const openedGroup = getAllDetailsState()
 		this.plugin.saveSettings();
 		this.settings.display();
-		openDetails(this.groupSnippetsName, true);
+		OpenAllDetails(openedGroup);
 	}
 }
