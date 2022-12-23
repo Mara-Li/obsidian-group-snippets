@@ -16,3 +16,22 @@ summary.group-snippets-summary {
 .is-mobile .setting-item.group-options .setting-item-control {
 	margin-top: -2em !important;
 }
+
+details > summary.group-snippets-summary {
+	list-style-type: none;
+}
+
+details[open] > summary.group-snippets-summary::before {
+	content: "▼";
+	padding-right: 5px;
+	display: inline-block;
+	padding-left: 5px;
+	margin-right: 5px;
+}
+
+details > summary.group-snippets-summary::before {
+	content: "▶️ ";
+	padding-left: 5px;
+	margin-right: 5px;
+}
+
