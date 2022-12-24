@@ -30,7 +30,8 @@ The switch is based on the **group name**, and the **theme name**. The group nam
 For example, `minimal dark` will be enabled if you switch to the dark theme or from any theme to minimal, in a dark color scheme. 
 
 
-> **warning** The plugin will differentiate mobile from phone : phone is your "smartphone", because this setting is based on your phone size. In the same idea, tablet is a bigger platform. So, a `mobile` group will be enabled for both phone and tablet. For example, if you want to have a different group for your Iphone and your Ipad, you should create a `phone` group (for your Iphone) and a `tablet` group (for your ipad).
+> **Warning**   
+> The plugin will differentiate mobile from phone : phone is your "smartphone", because this setting is based on your phone size. In the same idea, tablet is a bigger platform. So, a `mobile` group will be enabled for both phone and tablet. For example, if you want to have a different group for your Iphone and your Ipad, you should create a `phone` group (for your Iphone) and a `tablet` group (for your ipad).
 
 Moreover, snippets linked to other theme (or color Scheme) will be disabled 😀 !
 
