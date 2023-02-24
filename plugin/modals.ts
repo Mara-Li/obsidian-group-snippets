@@ -1,7 +1,6 @@
 import {App, FuzzySuggestModal, Modal, Notice, Setting} from "obsidian";
 import {GroupSnippet, GroupSnippetsSettings, Snippets} from "./interface";
 import {OpenAllDetails, getAllDetailsState} from "./utils";
-import t, {StringFunc} from "./i18n"
 import GroupSnippetsPlugins from "./main";
 import {GroupSnippetsSettingsTabs} from "./settings";
 

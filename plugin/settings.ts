@@ -1,9 +1,8 @@
 import {App, ButtonComponent, ExtraButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
 import GroupSnippetsPlugins from "./main";
 import {GroupSnippetsModal, GroupSnippetNaming} from "./modals";
-import t from './i18n'
 import {getAllDetailsState, OpenAllDetails} from "./utils";
-
+import i18next from "i18next";
 
 export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 	plugin: GroupSnippetsPlugins;

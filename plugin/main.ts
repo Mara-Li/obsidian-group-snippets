@@ -1,8 +1,8 @@
 import {Plugin, Platform, Notice} from 'obsidian';
 import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel, WhichPlatform} from './interface';
 import {GroupSnippetsSettingsTabs} from './settings';
-import t, {StringFunc} from "./i18n"
-import enUS from './i18n/locales/en-us';
+import i18next from 'i18next';
+import { ressources, translationLanguage } from './i18n/i18next';
 
 export default class GroupSnippetsPlugins extends Plugin {
 	settings: GroupSnippetsSettings;
@@ -49,7 +49,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 
 	isDarkOrLightColorScheme(groupName: string) {
 		const translationDarkTheme = [t('darkTheme') as string, enUS['darkTheme']];
-		const translationLightTheme = [t('lightTheme'), enUS['lightTheme']]
+		const translationLightTheme = [i18next.t(""), "light"];
 		if (translationLightTheme.some((theme: string) => groupName.toLowerCase().includes(theme))) {
 			return 'light';
 		} else if (translationDarkTheme.some((theme: string) => groupName.toLowerCase().includes(theme))) {
@@ -156,6 +156,11 @@ export default class GroupSnippetsPlugins extends Plugin {
 	async onload() {
 		console.log('Enable Group Snippets');
 		await this.loadSettings();
+		i18next.init({
+			lng: translationLanguage,
+			fallbackLng: "en",
+			resources: ressources,
+		});
 		// @ts-ignore
 		const platform: WhichPlatform = {
 			isDesktop : Platform.isDesktop,
