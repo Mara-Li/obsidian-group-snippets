@@ -43,7 +43,7 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 					.setTooltip(i18next.t("settings.add.tooltip"))
 					.onClick(async () => {
 						this.plugin.settings.groups.push({
-							name: "Untitled",
+							name: i18next.t("settings.add.untitled"),
 							snippets: [],
 							active: false,
 							themeLinked: "",

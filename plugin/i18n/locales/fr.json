@@ -1,52 +1,52 @@
 {
-    "commands":{
-        "name": "Activation du groupe {{- name}}",
-        "add": "Ajout de {{- snippet}} à {{- group}}",
-        "enable": "Le groupe {{- group}} a été activé",
-        "reload": "Recharger les snippets"
-    },
-    "theme": {
-        "dark": "sombre",
-        "light": "clair"
-    },
-    "settings": {
-        "title": "Snippets",
-        "desc" : "Voici la liste des snippets groupés créés par le plugin.",
-        "help" : "Vous pouvez ajouter/supprimer/modifier les groupes ici.",
-        "add": {
-            "title" : "Ajouter un groupe",
-            "tooltip": "Ajouter un nouveau groupe de snippets"
-        },
-        "refresh" : {
-            "tooltip" : "Rafraîchir la liste des snippets",
-            "notice" : "Snippet rechargé"
-        },
-        "everything" : {
-            "enable" : "Activer tous les snippets",
-            "disable" : "Désactiver tous les snippets"
-        },
-        "remove" : "Supprimer le groupe {{- name}}",
-        "log": {
-            "title": "Niveau de log",
-            "desc": "Le niveau de log pour ce module",
-            "options": {
-                "info": "Info",
-                "warn": "Avertissement",
-                "error": "Erreur",
-                "none": "Aucun"
-            }
-        }
-    },
-    "modals" : {
-        "submit": "Valider",
-        "selected" : "Selection de {{- snippet}}",
-        "error" : "Erreur ! Ce groupe existe déjà.",
-        "edit" : {
-            "title" : "Édition de {{- snippet}}",
-            "tooltip": "Éditer ce groupe de snippets, en ajoutant et supprimant des snippets...",
-            "active": "Activer ce snippet",
-            "disable": "Désactiver ce snippet",
-            "add": "Ajouter un snippet"
-        }
-    }
+	"commands": {
+		"add": "Ajout de {{- snippet}} à {{- group}}",
+		"enable": "Le groupe {{- group}} a été activé",
+		"name": "Activation du groupe {{- name}}"
+	},
+	"log": {
+		"disabling": "Désactivation de {{- snippet}}",
+		"running": "Exécution de Group Snippet Commands pour {{- snippet}}"
+	},
+	"modals": {
+		"edit": {
+			"add": "Ajouter un snippet",
+			"delete": "Supprimer {{- snippet}}",
+			"title": "Édition de {{- snippet}}"
+		},
+		"submit": "Valider"
+	},
+	"settings": {
+		"add": {
+			"title": "Ajouter un groupe",
+			"tooltip": "Ajouter un nouveau groupe de snippets",
+			"untitled": "Groupe sans titre"
+		},
+		"desc": "Voici la liste des snippets groupés créés par le plugin.",
+		"everything": {
+			"disable": "Désactiver tous les snippets",
+			"enable": "Activer tous les snippets"
+		},
+		"help": "Vous pouvez ajouter/supprimer/modifier les groupes ici.",
+		"log": {
+			"desc": "Le niveau de log pour ce module",
+			"options": {
+				"error": "Erreur",
+				"info": "Info",
+				"none": "Aucun",
+				"warn": "Avertissement"
+			},
+			"title": "Niveau de log"
+		},
+		"refresh": {
+			"notice": "Snippet rechargé",
+			"tooltip": "Rafraîchir la liste des snippets"
+		},
+		"remove": "Supprimer le groupe {{- name}}",
+		"title": "Snippets"
+	},
+	"theme": {
+		"dark": "sombre",
+		"light": "clair"
+	}
 }

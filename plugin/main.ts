@@ -103,7 +103,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		const allGroupSnippet = this.settings.groups;
 		const notThisTheme= allGroupSnippet.filter((group: GroupSnippet) => group.themeLinked !== themeName && group.themeLinked !== "");
 		for (const group of notThisTheme) {
-			this.logging("Disabling " + group.name);
+			this.logging(i18next.t("log.disabling", {name: group.name}));
 			for (const snippet of group.snippets) {
 				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
@@ -148,7 +148,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		});
 		const notThisPlatform = allGroupSnippet.filter((group: GroupSnippet) => notThis.includes(group.support));
 		for (const group of notThisPlatform) {
-			this.logging("Disabling " + group.name);
+			this.logging(i18next.t("log.disabling", {name: group.name}));
 			for (const snippet of group.snippets) {
 				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
@@ -160,7 +160,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 		const allGroupSnippet = this.settings.groups;
 		const notThisColorScheme= allGroupSnippet.filter((group: GroupSnippet) => group.colorScheme !== colorScheme && group.colorScheme !== "both");
 		for (const group of notThisColorScheme) {
-			this.logging("Disabling " + group.name);
+			this.logging(i18next.t("log.disabling", { name: group.name }));
 			for (const snippet of group.snippets) {
 				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
@@ -171,7 +171,7 @@ export default class GroupSnippetsPlugins extends Plugin {
 	toggleEnabledSnippet(groupSnippet: GroupSnippet) {
 		// @ts-ignore
 		const customCSS = this.app.customCss;
-		this.logging("Running the group Snippet commands for " + groupSnippet.name);
+		this.logging(i18next.t("log.running", {name: groupSnippet.name}));
 		for (const snippet of groupSnippet.snippets) {
 			customCSS.setCssEnabledStatus(snippet.snippetName, snippet.enabled);
 		}

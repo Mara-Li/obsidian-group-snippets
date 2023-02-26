@@ -46,7 +46,7 @@ export class GroupSnippetsEdit extends Modal {
 				.addExtraButton((button) => {
 					button
 						.setIcon("trash")
-						.setTooltip(i18next.t("modals.delete", {snippet: snippet.snippetName}) as string)
+						.setTooltip(i18next.t("modals.edit.delete", {snippet: snippet.snippetName}) as string)
 						.onClick(async () => {
 							this.result.snippets.splice(this.result.snippets.indexOf(snippet), 1);
 							await this.plugin.saveSettings();
