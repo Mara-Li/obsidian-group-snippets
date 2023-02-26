@@ -1,7 +1,6 @@
 import {App, ButtonComponent, ExtraButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
 import GroupSnippetsPlugins from "./main";
-import {GroupSnippetsModal, GroupSnippetNaming} from "./modals";
-import {getAllDetailsState, OpenAllDetails} from "./utils";
+import {GroupSnippetsEdit} from "./modals";
 import i18next from "i18next";
 
 export class GroupSnippetsSettingsTabs extends PluginSettingTab {
@@ -31,164 +30,124 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: (t('snippetListHeader') as string)});
-		containerEl.createEl('p', {text: (t('snippetListDesc') as string)});
-		containerEl.createEl('p', {text: t('snippetListHelp') as string});
+		containerEl.createEl("h2", {text: (i18next.t("settings.title") as string)});
+		containerEl.createEl("p", {text: (i18next.t("settings.desc") as string)});
+		containerEl.createEl("p", {text: i18next.t("settings.help") as string});
 
 		new Setting(containerEl)
-			.setName(t('addGroupHeader') as string)
-			.setClass('group-snippets-button-container')
+			.setName(i18next.t("settings.add.title") as string)
+			.setClass("group-snippets-button-container")
 			.addButton((btn: ButtonComponent) => {
 				btn
-					.setIcon('plus')
-					.setTooltip(t('addGroupTooltip') as string)
+					.setIcon("plus")
+					.setTooltip(i18next.t("settings.add.tooltip"))
 					.onClick(async () => {
-					new GroupSnippetNaming(this.app, this.plugin, async (result) => {
 						this.plugin.settings.groups.push({
-							name: result,
+							name: "Untitled",
 							snippets: [],
 							active: false,
-							themeLinked: this.plugin.themeLinkedToGroupSnippet(result),
-							colorScheme: this.plugin.isDarkOrLightColorScheme(result),
-							support: this.plugin.isMobileOrDesktop(result)
+							themeLinked: "",
+							colorScheme: "both",
+							support: "both"
 						});
 						await this.plugin.saveSettings();
-						const detailState = getAllDetailsState();
+						await this.plugin.addNewCommand(undefined, this.plugin.settings.groups[this.plugin.settings.groups.length - 1]);
 						this.display();
-						OpenAllDetails(detailState);
-					}).open();
-				})
+					});
 			})
 			.addButton((btn: ButtonComponent) => {
 				btn
-					.setIcon('switch')
-					.setTooltip(t('refreshToolTip') as string)
+					.setIcon("switch")
+					.setTooltip(i18next.t("settings.refresh.tooltip"))
 					.onClick(async () => {
 						//@ts-ignore
 						const customCSS = (this.app as unknown).customCss;
 						customCSS.readCssFolders();
 						await this.removeDeletedSnippets(this.plugin);
-						this.display();
-						new Notice(t('refreshNotice') as string);
-				})
+						new Notice(i18next.t("settings.refresh.notice") as string);
+					});
 			});
 
 		for (const snippets of this.plugin.settings.groups) {
+			const icon = snippets.active ? "check-in-circle" : "cross-in-box";
+			const desc = snippets.active ? i18next.t("settings.everything.enable") as string : i18next.t("settings.everything.disable") as string;
 			const groupName = snippets.name;
-			const details = containerEl.createEl('details');
-			details.addClass('group-snippets-details');
-			const summary = details.createEl('summary', {text: groupName});
-			summary.addClass('group-snippets-summary');
-			const icon = snippets.active ? 'check-in-circle' : 'cross-in-box'
-			const iconDesc = snippets.active ? (t('toggleEverything') as string) : (t('disableEverything') as string);
-			new Setting(summary)
-				.setClass('group-options')
-				.addExtraButton((btn: ExtraButtonComponent) => {
-					btn
-						.setIcon('edit')
-						.setTooltip(t('addSnippet') as string)
-						.onClick( async () => {
-							new GroupSnippetsModal(this.app, this.plugin, this, groupName).open();
-							const detailState = getAllDetailsState();
+			new Setting(containerEl)
+				.setClass("group-options")
+				.addText((text) => {
+					text
+						.setValue(groupName)
+						.onChange(async (value) => {
+							snippets.name = value;
+							snippets.themeLinked = this.plugin.themeLinkedToGroupSnippet(value);
+							snippets.colorScheme = this.plugin.isDarkOrLightColorScheme(value);
+							snippets.support = this.plugin.isMobileOrDesktop(value);
 							await this.plugin.saveSettings();
-							this.display();
-							OpenAllDetails(detailState);
-					})
+						});
 				})
 				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
-						.setIcon('trash')
-						.setTooltip(t('deleteGroup') as string)
+						.setIcon("trash")
+						.setTooltip(i18next.t("settings.remove", {name: groupName}))
 						.onClick(async () => {
 							this.plugin.settings.groups = this.plugin.settings.groups.filter(group => group.name !== groupName);
-							const detailState = getAllDetailsState();
 							await this.plugin.saveSettings();
+							await this.plugin.removeCommand();
 							this.display();
-							OpenAllDetails(detailState);
-						})
+						});
 				})
-
+				.addExtraButton((btn: ExtraButtonComponent) => {
+					btn
+						.setIcon("edit")
+						.setTooltip(i18next.t("modals.edit.title", {snippet: groupName}) as string)
+						.onClick( async () => {
+							new GroupSnippetsEdit(this.app, this.plugin, snippets, result => {
+								snippets.snippets = result.snippets;
+							}).open();
+							await this.plugin.saveSettings();
+						});
+				})
 				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
 						.setIcon(icon)
-						.setTooltip(iconDesc)
+						.setTooltip(desc)
 						.onClick(async () => {
-							//disable the click on the summary
-							summary.addEventListener('click', (e) => {
-								e.preventDefault();
-							});
-							
 							if (snippets.active) {
 								snippets.active = false;
 								snippets.snippets.forEach(snippet => {
 									snippet.enabled = true;
-								})
+								});
 							} else {
 								snippets.active = true;
 								snippets.snippets.forEach(snippet => {
 									snippet.enabled = false;
-								})
+								});
 							}
-							
-							const detailState = getAllDetailsState();
 							await this.plugin.saveSettings();
 							this.display();
-							OpenAllDetails(detailState);
-						})
+						});
 				})
 				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
-						.setTooltip(t('toggleSnippet') as string)
-						.setIcon('command-glyph')
+						.setTooltip(i18next.t("commands.name", {name: groupName}) as string)
+						.setIcon("command-glyph")
 						.onClick(async () => {
-							summary.addEventListener('click', (e) => {
-								e.preventDefault();
-							});
 							this.plugin.toggleEnabledSnippet(snippets);
-							const detailState = getAllDetailsState();
 							await this.plugin.saveSettings();
 							this.display();
-							OpenAllDetails(detailState);
-						})
-				});
-			for (const snippet of snippets.snippets) {
-				new Setting(details)
-					.setClass('group-snippet-setting')
-					.setName(snippet.snippetName)
-					.addToggle((toggle) => {
-						toggle
-							.setValue(snippet.enabled)
-							.onChange(async (value) => {
-								snippet.enabled = value;
-								await this.plugin.saveSettings();
 						});
-					})
-					.addExtraButton((btn: ExtraButtonComponent) => {
-						btn
-							.setIcon('trash')
-							.setTooltip(t('removeSnippet') as string)
-							.onClick(async () => {
-							snippets.snippets.splice(snippets.snippets.indexOf(snippet), 1);
-							const detailState = getAllDetailsState();
-							await this.plugin.saveSettings();
-							this.display();
-							OpenAllDetails(detailState);
-						})
-					});
-			}
-
+				});
 		}
 		new Setting(containerEl)
-			.setName(t('loglevel') as string)
-			.setDesc(t('loglevelDesc') as string)
-			.setClass('group-snippets-loglevel')
+			.setName(i18next.t("settings.log.title") as string)
+			.setDesc(i18next.t("settings.log.desc") as string)
 			.addDropdown((dropdown) => {
 				dropdown
 					.addOptions({
-						'info': t('logInfo') as string,
-						'warn': t('logWarn') as string,
-						'error': t('logError') as string,
-						'none': t('logNone') as string
+						"info": i18next.t("settings.log.options.info"),
+						"warn": i18next.t("settings.log.options.warn"),
+						"error": i18next.t("settings.log.options.error"),
+						"none": i18next.t("settings.log.options.none")
 					})
 					.setValue(this.plugin.settings.log)
 					.onChange(async (value) => {

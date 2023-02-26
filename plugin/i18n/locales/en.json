@@ -1,13 +1,13 @@
 {
     "commands":{
-        "name": "Toggle group: {{- name}}",
+        "name": "Toggle group {{- name}}",
         "add": "Adding {{- snippet}} to {{- group}}",
-        "enable": "The group {{- group}} is has been enabled",
+        "enable": "The group {{- group}} has been enabled",
         "reload": "Reload group snippets"
     },
     "theme": {
-        "dark": "Dark",
-        "light": "Light"
+        "dark": "dark",
+        "light": "light"
     },
     "settings": {
         "title": "Snippets",
@@ -25,16 +25,13 @@
             "enable" : "Enable all snippets",
             "disable" : "Disable all snippets"
         },
-        "snippets": {
-            "toggle": "Toggle the grouped snippets in on/off",
-            "remove" : "Remove this snippets"
-        },
+        "remove" :  "Deleting group {{- name}}",
         "log": {
             "title": "Log level",
             "desc": "The log level for the plugin",
             "options": {
                 "info": "Info",
-                "warning": "Warning",
+                "warn": "Warning",
                 "error": "Error",
                 "none": "None"
             }
@@ -45,8 +42,12 @@
         "selected" : "Selected {{- snippet}}",
         "error" : "Error! This group already exists.",
         "edit" : {
-            "title" : "Edit group",
-            "tooltip": "Edit the group, with adding or removing snippets"
+            "title" : "Editing {{- snippet}}",
+            "tooltip": "Edit the group, with adding or removing snippets",
+            "active": "Active snippets",
+            "disable": "Disable snippets",
+            "delete": "Delete {{- snippet}}",
+            "add": "Add snippets"
         }
     }
 }
