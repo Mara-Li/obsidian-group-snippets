@@ -3,7 +3,6 @@ import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel, WhichPl
 import {GroupSnippetsSettingsTabs} from "./settings";
 import i18next from "i18next";
 import { ressources, translationLanguage } from "./i18n/i18next";
-import {GroupSnippetsModal} from "./modals";
 
 export default class GroupSnippetsPlugins extends Plugin {
 	settings: GroupSnippetsSettings;

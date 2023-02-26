@@ -19,7 +19,6 @@ export class GroupSnippetsEdit extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 		contentEl.createEl("h2", {text: i18next.t("modals.edit.title", {snippet: this.result.name}) as string});
-		let actualGrp = this.result;
 		new Setting(contentEl)
 			.setClass("group-snippets-modal-title")
 			.addButton((button: ButtonComponent) => {
@@ -33,7 +32,7 @@ export class GroupSnippetsEdit extends Modal {
 						}).open();
 					});
 			});
-		for (const snippet of actualGrp.snippets) {
+		for (const snippet of this.result.snippets) {
 			new Setting(contentEl)
 				.setClass("group-snippets-modal-snippet")
 				.setName(snippet.snippetName)
@@ -111,6 +110,7 @@ export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 		return item.snippetName;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Snippets, evt: MouseEvent | KeyboardEvent) {
 		const groupSnippets: GroupSnippet | undefined = this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName);
 		if (groupSnippets !== undefined) {
