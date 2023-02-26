@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.10.0](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.9.0...1.10.0) (2023-02-26)
+
+
+### Features
+
+* Rework UI settings ([9aab7b5](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/9aab7b59c8089f1c6e50ad486ecf0d95a546306a))
+
 ## [1.9.0](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.8.6...1.9.0) (2022-12-23)
 
 
