@@ -1,41 +1,69 @@
-import {App, FuzzySuggestModal, Modal, Notice, Setting} from "obsidian";
+import {App, ButtonComponent, FuzzySuggestModal, Modal, Notice, Setting} from "obsidian";
 import {GroupSnippet, GroupSnippetsSettings, Snippets} from "./interface";
-import {OpenAllDetails, getAllDetailsState} from "./utils";
 import GroupSnippetsPlugins from "./main";
-import {GroupSnippetsSettingsTabs} from "./settings";
+import i18next from "i18next";
 
-export class GroupSnippetNaming extends Modal {
-	result: string;
+export class GroupSnippetsEdit extends Modal {
+	result: GroupSnippet;
 	plugin: GroupSnippetsPlugins;
-	onSubmit: (result: string) => void;
+	onSubmit: (result: GroupSnippet) => void;
 
 
-	constructor(app: App, plugin: GroupSnippetsPlugins, onSubmit: (result: string) => void) {
+	constructor(app: App, plugin: GroupSnippetsPlugins, groupSnippet: GroupSnippet, onSubmit: (result: GroupSnippet) => void) {
 		super(app);
 		this.plugin = plugin;
+		this.result = groupSnippet;
 		this.onSubmit = onSubmit;
 	}
 	onOpen() {
 		const {contentEl} = this;
-		contentEl.createEl('h2', {text: t('groupSnippetNaming') as string});
+		contentEl.empty();
+		contentEl.createEl("h2", {text: i18next.t("modals.edit.title", {snippet: this.result.name}) as string});
 		new Setting(contentEl)
-			.addText((text) =>
-				text.onChange((value) => {
-					this.result = value
-				}));
+			.setClass("group-snippets-modal-title")
+			.addButton((button: ButtonComponent) => {
+				button
+					.setButtonText(i18next.t("modals.edit.add") as string)
+					.onClick(async () => {
+						new GroupSnippetsModal(this.app, this.plugin, this.result.name, result=>{
+							this.result.snippets = result.snippets;
+							this.plugin.saveSettings();
+							this.onOpen();
+						}).open();
+					});
+			});
+		for (const snippet of this.result.snippets) {
+			new Setting(contentEl)
+				.setClass("group-snippets-modal-snippet")
+				.setName(snippet.snippetName)
+				.addToggle(toggle => {
+					toggle.setValue(snippet.enabled)
+						.onChange(async (value) => {
+							snippet.enabled = value;
+							await this.plugin.saveSettings();
+						});
+				})
+				.addExtraButton((button) => {
+					button
+						.setIcon("trash")
+						.setTooltip(i18next.t("modals.edit.delete", {snippet: snippet.snippetName}) as string)
+						.onClick(async () => {
+							this.result.snippets.splice(this.result.snippets.indexOf(snippet), 1);
+							await this.plugin.saveSettings();
+							this.onOpen();
+						});
+				});
+		}
+		
 		new Setting(contentEl)
-			.addButton((btn) =>
-				btn
-					.setButtonText(t('submitButton') as string)
-					.setCta()
-					.onClick(() => {
-						if (this.plugin.settings.groups.find(group => group.name === this.result) === undefined) {
-							this.onSubmit(this.result);
-							this.close();
-						} else {
-							new Notice(t('noticeError') as string);
-						}
-					}));
+			.addButton((button: ButtonComponent) => {
+				button
+					.setButtonText(i18next.t("modals.submit") as string)
+					.onClick(async () => {
+						this.onSubmit(this.result);
+						this.close();
+					});
+			});
 	}
 	onClose() {
 		const { contentEl } = this;
@@ -44,22 +72,22 @@ export class GroupSnippetNaming extends Modal {
 }
 
 export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
-	app: App
+	app: App;
 	plugin: GroupSnippetsPlugins;
-	settings: GroupSnippetsSettingsTabs;
 	groupSnippetsName: string;
+	onSubmit: (result: GroupSnippet) => void;
 
-	constructor(app: App, plugin: GroupSnippetsPlugins, settingsTab: GroupSnippetsSettingsTabs, groupSnippetsName: string) {
+	constructor(app: App, plugin: GroupSnippetsPlugins, groupSnippetsName: string, onSubmit: (result: GroupSnippet) => void) {
 		super(app);
 		this.plugin = plugin;
-		this.settings = settingsTab;
 		this.groupSnippetsName = groupSnippetsName;
+		this.onSubmit = onSubmit;
 	}
 
 	getAllSnippets(settings: GroupSnippetsSettings, groupName: string): Snippets[] {
 		// @ts-ignore
 		const customCSS = this.app.customCss;
-		const groups:Snippets[] = []
+		const groups:Snippets[] = [];
 		const inThisGroup = settings.groups.find(group => group.name === groupName);
 		for (const snippets of customCSS.snippets) {
 			// @ts-ignore
@@ -82,18 +110,15 @@ export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 		return item.snippetName;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onChooseItem(item: Snippets, evt: MouseEvent | KeyboardEvent) {
 		const groupSnippets: GroupSnippet | undefined = this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName);
 		if (groupSnippets !== undefined) {
 			// @ts-ignore
-			this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName).snippets.push(item);
-			// @ts-ignore
-			const addedSnippets:{name: string, groupName: string} = {name: item.snippetName, groupName: this.groupSnippetsName};
-			new Notice((t('addSnippets') as StringFunc)(addedSnippets));
+			new Notice(i18next.t("commands.add", {snippet: item.snippetName, group: this.groupSnippetsName}) as string);
+			groupSnippets.snippets.push(item);
+			
+			this.onSubmit(groupSnippets);
 		}
-		const openedGroup = getAllDetailsState()
-		this.plugin.saveSettings();
-		this.settings.display();
-		OpenAllDetails(openedGroup);
 	}
 }
