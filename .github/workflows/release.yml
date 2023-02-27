@@ -1,12 +1,12 @@
 name: Release Obsidian plugin
 
 on:
-    workflow_dispatch:
-    push:
-        tags:
-            - "*"
+  workflow_dispatch:
+  push:
+    tags:
+      - "*"
 env:
-    PLUGIN_NAME: obsidian-group-snippets # Change this to match the id of your plugin.
+  PLUGIN_NAME: obsidian-group-snippets # Change this to match the id of your plugin.
 
 jobs:
   build:
@@ -52,8 +52,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ github.ref }}
         with:
-          tag_name: ${{ github.ref }}
-          name: ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           body_path: CHANGELOG-LATEST.md
           draft: false
           prerelease: false
