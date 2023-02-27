@@ -69,8 +69,7 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 			});
 
 		for (const snippets of this.plugin.settings.groups) {
-			const icon = snippets.active ? "check-in-circle" : "cross-in-box";
-			const desc = snippets.active ? i18next.t("settings.everything.enable") as string : i18next.t("settings.everything.disable") as string;
+			
 			const groupName = snippets.name;
 			new Setting(containerEl)
 				.setClass("group-options")
@@ -107,26 +106,7 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 							await this.plugin.saveSettings();
 						});
 				})
-				.addExtraButton((btn: ExtraButtonComponent) => {
-					btn
-						.setIcon(icon)
-						.setTooltip(desc)
-						.onClick(async () => {
-							if (snippets.active) {
-								snippets.active = false;
-								snippets.snippets.forEach(snippet => {
-									snippet.enabled = true;
-								});
-							} else {
-								snippets.active = true;
-								snippets.snippets.forEach(snippet => {
-									snippet.enabled = false;
-								});
-							}
-							await this.plugin.saveSettings();
-							this.display();
-						});
-				})
+				
 				.addExtraButton((btn: ExtraButtonComponent) => {
 					btn
 						.setTooltip(i18next.t("commands.name", {name: groupName}) as string)
