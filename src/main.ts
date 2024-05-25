@@ -34,11 +34,11 @@ export default class GroupSnippetsPlugins extends Plugin {
 	}
 
 	logging(message: string) {
-		if (this.settings.log === LogLevel.warn) {
+		if (this.settings.log === LogLevel.Warn) {
 			console.warn(message);
-		} else if (this.settings.log === LogLevel.error) {
+		} else if (this.settings.log === LogLevel.Error) {
 			console.error(message);
-		} else if (this.settings.log === LogLevel.info) {
+		} else if (this.settings.log === LogLevel.Info) {
 			console.info(message);
 		}
 	}
