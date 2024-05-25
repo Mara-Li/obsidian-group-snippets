@@ -30,6 +30,9 @@ importers:
       '@types/obsidian-typings':
         specifier: npm:obsidian-typings@^1.1.5
         version: obsidian-typings@1.1.5(@ophidian/electron-types@24.3.1)(@types/node@20.12.12)(obsidian@1.5.7(@codemirror/state@6.4.1)(@codemirror/view@6.26.3))
+      ansi-colors:
+        specifier: ^4.1.3
+        version: 4.1.3
       builtin-modules:
         specifier: ^3.3.0
         version: 3.3.0
@@ -305,6 +308,10 @@ packages:
   agent-base@7.1.1:
     resolution: {integrity: sha512-H0TSyFNDMomMNJQBn8wFV5YC/2eJ+VXECwOadZJT554xP6cODZHPX3H9QMQECxvrgiSOP1pHjy1sMWQVYJOUOA==}
     engines: {node: '>= 14'}
+
+  ansi-colors@4.1.3:
+    resolution: {integrity: sha512-/6w/C21Pm1A7aZitlI5Ni/2J6FFQN8i1Cvz3kHABAAbw93v/NlvKdVOqz7CCWz/3iv/JplRSEEZ83XION15ovw==}
+    engines: {node: '>=6'}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1418,6 +1425,8 @@ snapshots:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+
+  ansi-colors@4.1.3: {}
 
   ansi-regex@5.0.1: {}
 
