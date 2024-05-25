@@ -1,5 +1,5 @@
-import {App, ButtonComponent, ExtraButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
-import GroupSnippetsPlugins from "./main";
+import {type App, type ButtonComponent, type ExtraButtonComponent, Notice, PluginSettingTab, Setting} from "obsidian";
+import type GroupSnippetsPlugins from "./main";
 import {GroupSnippetsEdit} from "./modals";
 import i18next from "i18next";
 
@@ -11,7 +11,6 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 	async removeDeletedSnippets(plugin: GroupSnippetsPlugins) {
-		// @ts-ignore
 		const customCSS = this.app.customCss;
 		for (const snippets of plugin.settings.groups) {
 			for (const snippet of snippets.snippets) {
@@ -60,9 +59,7 @@ export class GroupSnippetsSettingsTabs extends PluginSettingTab {
 					.setIcon("switch")
 					.setTooltip(i18next.t("settings.refresh.tooltip"))
 					.onClick(async () => {
-						//@ts-ignore
-						const customCSS = (this.app as unknown).customCss;
-						customCSS.readCssFolders();
+						this.app.customCss.readSnippets()
 						await this.removeDeletedSnippets(this.plugin);
 						new Notice(i18next.t("settings.refresh.notice") as string);
 					});

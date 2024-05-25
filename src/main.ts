@@ -1,16 +1,15 @@
 import {Plugin, Platform, Notice} from "obsidian";
-import {GroupSnippetsSettings, DEFAULT_SETTINGS, GroupSnippet, LogLevel, WhichPlatform} from "./interface";
+import {type GroupSnippetsSettings, DEFAULT_SETTINGS, type GroupSnippet, LogLevel, type WhichPlatform} from "./interface";
 import {GroupSnippetsSettingsTabs} from "./settings";
 import i18next from "i18next";
 import { ressources, translationLanguage } from "./i18n/i18next";
 
 export default class GroupSnippetsPlugins extends Plugin {
-	settings: GroupSnippetsSettings;
+	settings!: GroupSnippetsSettings;
 
 	async addNewCommand(oldGroupName: GroupSnippet | undefined, newGroupName: GroupSnippet |undefined) {
 		if (oldGroupName !== undefined) {
-			// @ts-ignore
-			await this.app.commands.removeCommand(`obsidian-group-snippets:${oldGroupName.name}`);
+			this.app.commands.removeCommand(`obsidian-group-snippets:${oldGroupName.name}`);
 		}
 		if (newGroupName !== undefined) {
 			this.addCommand({
@@ -26,13 +25,10 @@ export default class GroupSnippetsPlugins extends Plugin {
 	}
 	
 	async removeCommand() {
-		//@ts-ignore
 		const pluginCommands = Object.keys(this.app.commands.commands).filter((command) => command.startsWith("create-note-in-folder"));
 		for (const command of pluginCommands) {
-			//remove commands if the folder is not in the settings
 			if (!this.settings.groups.some((grp) => grp.name === command.replace("obsidian-group-snippets:", ""))) {
-				//@ts-ignore
-				await app.commands.removeCommand(command);
+				this.app.commands.removeCommand(command);
 			}
 		}
 	}
@@ -84,12 +80,10 @@ export default class GroupSnippetsPlugins extends Plugin {
 	}
 
 	themeLinkedToGroupSnippet(groupName: string) {
-		// @ts-ignore
 		const newObsidianThemes = Object.keys(this.app.customCss.themes);
-		// @ts-ignore
 		const legacyThemes = this.app.customCss.oldThemes;
 		const downloadedTheme = [...newObsidianThemes, ...legacyThemes];
-		
+
 		for (const theme of downloadedTheme) {
 			const themeName = theme.replace(/(-{2,}|_)/, "-").split("-");
 			if (themeName.some((name: string) => groupName.toLowerCase().includes(name.toLowerCase()))) {
@@ -99,13 +93,13 @@ export default class GroupSnippetsPlugins extends Plugin {
 		return "";
 	}
 
-	disableOtherThemeGroup(themeName: string) {
+	disableOtherThemeGroup(themeName?: string) {
+		if (!themeName) return;
 		const allGroupSnippet = this.settings.groups;
 		const notThisTheme= allGroupSnippet.filter((group: GroupSnippet) => group.themeLinked !== themeName && group.themeLinked !== "");
 		for (const group of notThisTheme) {
 			this.logging(i18next.t("log.disabling", {name: group.name}));
 			for (const snippet of group.snippets) {
-				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
 			}
 		}
@@ -222,15 +216,14 @@ export default class GroupSnippetsPlugins extends Plugin {
 		
 		this.registerEvent(this.app.workspace.on("css-change", () => {
 			const currentTheme = this.settings.enabledTheme;
-			// @ts-ignore
 			const newTheme = this.app.vault.config?.cssTheme;
-			// @ts-ignore
+			if (!newTheme) return;
 			const isDarkTheme = this.app.vault.config?.theme === "obsidian";
 			const wasDarkTheme = this.settings.isDarkTheme;
 			const colorScheme = isDarkTheme ? "dark" : "light";
 
 			if (newTheme !== currentTheme) {
-				this.logging(newTheme + " !== " + currentTheme);
+				this.logging(`${newTheme} !== ${currentTheme}`);
 				this.disableOtherThemeGroup(newTheme);
 				this.disableByPlatform(platform);
 				const groupedSnippetThemed: GroupSnippet[] = [];
@@ -259,7 +252,9 @@ export default class GroupSnippetsPlugins extends Plugin {
 				}
 				this.settings.enabledTheme = newTheme;
 				this.saveSettings();
-			} else if (isDarkTheme !== wasDarkTheme) { //color scheme changement, activate light / dark theme ;; no need to check CSS theme here
+				return;
+			}
+			if (isDarkTheme !== wasDarkTheme) { //color scheme changement, activate light / dark theme ;; no need to check CSS theme here
 				const groupSnippetThemed = groupSnippets.filter(group => group.colorScheme === colorScheme || group.colorScheme === "both");
 				this.disableOtherColorScheme(colorScheme);
 				this.disableByPlatform(platform);
@@ -274,7 +269,6 @@ export default class GroupSnippetsPlugins extends Plugin {
 			}
 		}));
 
-		// @ts-ignore
 		groupSnippets.forEach(group => {
 			if (!group.colorScheme) {
 				group.colorScheme = this.isDarkOrLightColorScheme(group.name);

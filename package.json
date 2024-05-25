@@ -3,46 +3,38 @@
 	"version": "1.10.0",
 	"description": "Create folder of snippets to activate them in one click ! ",
 	"main": "main.js",
+	"type": "module",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"vault": "node esbuild.config.mjs production && copy main.js \"D:\\Documents\\Seed\\.obsidian\\plugins\\obsidian-group-snippets\" && copy styles.css \"D:\\Documents\\Seed\\.obsidian\\plugins\\obsidian-group-snippets\"",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "commit-and-tag-version",
-		"bump": "node version-bump.mjs",
-		"beta": "commit-and-tag-version  --prerelease --tag-build beta",
-		"publish": "commit-and-tag-version --packageFiles package.json --bumpFiles manifest.json package.json"
+		"bump": "node commit-and-tag-version.js",
+		"postbump": "git push --follow-tags origin master",
+		"lint": "pnpm biome lint --apply src/"
 	},
 	"commit-and-tag-version": {
-		"t": "",
-		"bumpFiles": [
-			{
-				"filename": "manifest-beta.json",
-				"type": "json"
-			},
-			{
-				"filename": "package.json",
-				"type": "json"
-			}
-		]
+		"t": ""
 	},
 	"keywords": [],
 	"author": "",
 	"license": "GPL-3.0",
 	"devDependencies": {
-		"@types/node": "^18.11.17",
-		"@typescript-eslint/eslint-plugin": "^5.47.0",
-		"@typescript-eslint/parser": "^5.53.0",
-		"builtin-modules": "3.3.0",
-		"esbuild": "^0.17.10",
-		"eslint": "^8.34.0",
-		"jsonc-eslint-parser": "^2.1.0",
-		"obsidian": "^1.1.1",
-		"tslib": "^2.5.0",
-		"typescript": "^4.9.5"
+		"@biomejs/biome": "1.7.3",
+		"@types/electron": "npm:@ophidian/electron-types@^24.3.1",
+		"@types/node": "^20.12.12",
+		"@types/obsidian-typings": "npm:obsidian-typings@^1.1.5",
+		"builtin-modules": "^3.3.0",
+		"commander": "^12.1.0",
+		"esbuild": "^0.21.4",
+		"obsidian": "^1.5.7",
+		"tslib": "^2.6.2",
+		"typescript": "^5.4.5"
+	},
+	"peerDependencies": {
+		"@types/electron": "npm:@ophidian/electron-types"
 	},
 	"dependencies": {
-		"commit-and-tag-version": "^11.1.0",
-		"eslint-plugin-jsonc": "^2.6.0",
-		"i18next": "^22.4.10"
+		"commit-and-tag-version": "^12.4.1",
+		"dotenv": "^16.4.5",
+		"i18next": "^23.11.5"
 	}
 }
