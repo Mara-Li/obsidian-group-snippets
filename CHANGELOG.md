@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.10.2](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.10.1...1.10.2) (2024-05-25)
+
+
+### Bug Fixes
+
+* cannot read properties of undefined when adding a snippets ([2157fcb](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/2157fcb2cec0b03f36b3f6b2baf7901ffee91efe))
+* styles.css absent of release ([15e0569](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/15e0569e1f45e4d6882ba59339d149d751e5ee94))
+
 ## [1.10.1](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.10.0...1.10.1) (2023-02-27)
 
 
