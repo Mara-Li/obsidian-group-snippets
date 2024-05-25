@@ -144,7 +144,6 @@ export default class GroupSnippetsPlugins extends Plugin {
 		for (const group of notThisPlatform) {
 			this.logging(i18next.t("log.disabling", {name: group.name}));
 			for (const snippet of group.snippets) {
-				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
 			}
 		}
@@ -156,14 +155,12 @@ export default class GroupSnippetsPlugins extends Plugin {
 		for (const group of notThisColorScheme) {
 			this.logging(i18next.t("log.disabling", { name: group.name }));
 			for (const snippet of group.snippets) {
-				// @ts-ignore
 				this.app.customCss.setCssEnabledStatus(snippet.snippetName, false);
 			}
 		}
 	}
 
 	toggleEnabledSnippet(groupSnippet: GroupSnippet) {
-		// @ts-ignore
 		const customCSS = this.app.customCss;
 		this.logging(i18next.t("log.running", {name: groupSnippet.name}));
 		for (const snippet of groupSnippet.snippets) {
@@ -183,31 +180,25 @@ export default class GroupSnippetsPlugins extends Plugin {
 		});
 		await this.loadSettings();
 
-		// @ts-ignore
 		const platform: WhichPlatform = {
 			isDesktop : Platform.isDesktop,
-			// @ts-ignore
 			isWin: Platform.isWin,
 			isMobile : Platform.isMobile,
 			isIosApp: Platform.isIosApp,
 			isAndroidApp: Platform.isAndroidApp,
-			// @ts-ignore
 			isPhone: Platform.isPhone,
-			// @ts-ignore
 			isTablet: Platform.isTablet,
 			isMacOS: Platform.isMacOS && !Platform.isIosApp,
-			// @ts-ignore
 			isLinux: Platform.isLinux,
 		};
 		const enabledTheme = this.settings.enabledTheme;
-		if (!enabledTheme || enabledTheme.length === 0) {
-			// @ts-ignore
-			this.settings.enabledTheme = this.app.vault.config?.cssTheme;
+		const vaultTheme = this.app.vault.config.cssTheme;
+		if ((!enabledTheme || enabledTheme.length === 0) && vaultTheme) {
+			this.settings.enabledTheme = vaultTheme;
 			await this.saveSettings();
 		}
 
 		if (this.settings.isDarkTheme === null) {
-			// @ts-ignore
 			this.settings.isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 			await this.saveSettings();
 		}
