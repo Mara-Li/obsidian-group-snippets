@@ -19,6 +19,9 @@ export class GroupSnippetsEdit extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 		contentEl.createEl("h2", {text: i18next.t("modals.edit.title", {snippet: this.result.name}) as string});
+		const icon = this.result.active ? "check-in-circle" : "cross-in-box";
+		const desc = this.result.active ? i18next.t("settings.everything.enable") as string : i18next.t("settings.everything.disable") as string;
+
 		new Setting(contentEl)
 			.setClass("group-snippets-modal-title")
 			.addButton((button: ButtonComponent) => {
@@ -31,7 +34,25 @@ export class GroupSnippetsEdit extends Modal {
 							this.onOpen();
 						}).open();
 					});
-			});
+			})
+		.addButton((btn: ButtonComponent) => {
+			btn
+				.setButtonText(desc)
+				.onClick(async () => {
+					if (this.result.active) {
+						this.result.active = false;
+						this.result.snippets.forEach(snippet => {
+							snippet.enabled = true;
+						});
+					} else {
+						this.result.active = true;
+						this.result.snippets.forEach(snippet => {
+							snippet.enabled = false;
+						});
+					}
+					this.onOpen();
+				});
+		})
 		for (const snippet of this.result.snippets) {
 			new Setting(contentEl)
 				.setClass("group-snippets-modal-snippet")
@@ -105,17 +126,16 @@ export class GroupSnippetsModal extends FuzzySuggestModal<Snippets> {
 
 	getItemText(item: Snippets): string {
 		return item.snippetName;
+
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	onChooseItem(item: Snippets, evt: MouseEvent | KeyboardEvent) {
+	onChooseItem(item: Snippets, _evt: MouseEvent | KeyboardEvent) {
 		const groupSnippets: GroupSnippet | undefined = this.plugin.settings.groups.find(group => group.name === this.groupSnippetsName);
-		if (groupSnippets !== undefined) {
-			// @ts-ignore
-			new Notice(i18next.t("commands.add", {snippet: item.snippetName, group: this.groupSnippetsName}) as string);
-			groupSnippets.snippets.push(item);
-			
-			this.onSubmit(groupSnippets);
+		if (groupSnippets === undefined) {
+			return;
 		}
+		new Notice(i18next.t("commands.add", {snippet: item.snippetName, group: this.groupSnippetsName}) as string);
+		groupSnippets.snippets.push(item);
+		this.onSubmit(groupSnippets);
 	}
 }

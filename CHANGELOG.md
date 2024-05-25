@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.10.1](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.10.0...1.10.1) (2023-02-27)
+
+
+### Bug Fixes
+
+* enable/disable all snippets from modals ([5bb288a](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/5bb288ad98161e779f1138d429f44d70d5b8d3bb))
+
 ## [1.10.0](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.9.0...1.10.0) (2023-02-26)
 
 
