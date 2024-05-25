@@ -1,11 +1,12 @@
 import { Command, Option } from "commander";
 import commitAndTagVersion from "commit-and-tag-version";
 import dedent from "dedent";
-import { theme, red, dim, gray, italic, bold, cyan, blue, green, underline as _underline, yellow, em as _em, heading as _heading, info as _info } from "ansi-colors";
+import pkg from "ansi-colors";
+const { red, dim, gray, italic, bold, cyan, blue, green, underline, yellow } = pkg;
 
 const program = new Command();
 
-theme({
+pkg.theme({
 	danger: red,
 	dark: dim.gray,
 	disabled: gray,
@@ -16,9 +17,12 @@ theme({
 	primary: blue,
 	strong: bold,
 	success: green.bold,
-	underline: _underline,
+	underline,
 	warning: yellow.underline,
 });
+
+const info = (msg) => pkg.info(msg);
+const heading = (msg) => pkg.heading(msg);
 
 program
 	.description("Bump version and create a new tag")
@@ -35,14 +39,14 @@ program
 program.parse();
 const opt = program.opts();
 
-const betaMsg = opt.beta ? _em("- Pre-release\n\t") : "";
-const dryRunMsg = opt.dryRun ? _em("- Dry run\n\t") : "";
+const betaMsg = opt.beta ? em("- Pre-release\n\t") : "";
+const dryRunMsg = opt.dryRun ? em("- Dry run\n\t") : "";
 const releaseAsMsg = opt.releaseAs
-	? _em(`- Release as ${_underline(opt.releaseAs)}`)
+	? em(`- Release as ${underline(opt.releaseAs)}`)
 	: "";
 
 const msg = dedent(`
-${_heading("Options :")}
+${heading("Options :")}
 	${betaMsg}${dryRunMsg}${releaseAsMsg}  
 `);
 
@@ -50,7 +54,7 @@ console.log(msg);
 console.log();
 
 if (opt.beta) {
-	console.log(`${bold.green(">")} ${_info.underline("Bumping beta version...")}`);
+	console.log(`${bold.green(">")} ${info.underline("Bumping beta version...")}`);
 	console.log();
 	const bumpFiles = [
 		{
@@ -68,7 +72,7 @@ if (opt.beta) {
 	];
 	commitAndTagVersion({
 		infile: "CHANGELOG-beta.md",
-		bumpFiles: bumpFiles,
+		bumpFiles,
 		prerelease: "",
 		dryRun: opt.dryRun,
 		tagPrefix: "",
@@ -81,9 +85,9 @@ if (opt.beta) {
 		});
 } else {
 	const versionBumped = opt.releaseAs
-		? _info("Release as " + _underline(opt.releaseAs))
-		: _info("Release");
-	console.log(`${bold.green(">")} ${_underline(versionBumped)}`);
+		? info(`Release as ${underline(opt.releaseAs)}`)
+		: info("Release");
+	console.log(`${bold.green(">")} ${underline(versionBumped)}`);
 	console.log();
 
 	const bumpFiles = [
