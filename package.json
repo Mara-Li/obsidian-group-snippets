@@ -24,6 +24,7 @@
 		"@types/obsidian-typings": "npm:obsidian-typings@^1.1.5",
 		"builtin-modules": "^3.3.0",
 		"commander": "^12.1.0",
+		"dedent": "^1.5.3",
 		"esbuild": "^0.21.4",
 		"obsidian": "^1.5.7",
 		"tslib": "^2.6.2",
