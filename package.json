@@ -7,7 +7,7 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs --production",
-		"bump": "node commit-and-tag-version.js",
+		"bump": "node commit-and-tag-version.mjs",
 		"postbump": "git push --follow-tags origin master",
 		"lint": "pnpm biome lint --apply src/"
 	},
