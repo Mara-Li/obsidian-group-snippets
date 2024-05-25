@@ -33,16 +33,16 @@ export interface GroupSnippetsSettings {
 }
 
 export enum LogLevel {
-	info = "info",
-	warn = "warn",
-	error = "error",
-	none = "none",
+	Info = "info",
+	Warn = "warn",
+	Error = "error",
+	None = "none",
 }
 
 export const DEFAULT_SETTINGS: GroupSnippetsSettings = {
 	groups: [],
 	enabledTheme: "",
 	isDarkTheme: null,
-	log: LogLevel.none
+	log: LogLevel.None
 };
 

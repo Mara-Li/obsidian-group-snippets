@@ -19,7 +19,6 @@ export class GroupSnippetsEdit extends Modal {
 		const {contentEl} = this;
 		contentEl.empty();
 		contentEl.createEl("h2", {text: i18next.t("modals.edit.title", {snippet: this.result.name}) as string});
-		const icon = this.result.active ? "check-in-circle" : "cross-in-box";
 		const desc = this.result.active ? i18next.t("settings.everything.enable") as string : i18next.t("settings.everything.disable") as string;
 
 		new Setting(contentEl)
