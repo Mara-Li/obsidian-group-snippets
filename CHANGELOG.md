@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.10.3](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.10.2...1.10.3) (2024-05-26)
+
+
+### Bug Fixes
+
+* reusable workflows ([0844a0a](https://github.com/Lisandra-dev/obsidian-group-snippets/commit/0844a0ac8946fbab43d02bb5bf271bd6cd72f6e8))
+
 ## [1.10.2](https://github.com/Lisandra-dev/obsidian-group-snippets/compare/1.10.1...1.10.2) (2024-05-25)
 
 
